@@ -13,6 +13,7 @@ public class Interface : MonoBehaviour {
   public float border;
   public Transform viewpoint;
   public Transform slider;
+  public Transform quad;
 
   private float _ratio;
 
@@ -60,6 +61,9 @@ public class Interface : MonoBehaviour {
     centerPosition = bottomLeft-(bottomLeft - bottomRight)* .5f+ up * .04f;
     slider.position = centerPosition;
     slider.rotation = viewpoint.rotation;
+    quad.rotation = viewpoint.rotation;
+    quad.position = viewpoint.forward * .02f + bottomLeft - ( bottomLeft-bottomRight) * .5f + ( topLeft-bottomLeft ) * .5f;
+
 
     borderLine.SetPosition( 0 , bottomLeft );
     borderLine.SetPosition( 1 , bottomRight );

@@ -24,6 +24,8 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnSwipeUp;
   public UnityEvent OnSwipeDown;
   public UnityEvent OnTap;
+  public UnityEvent OnDown;
+  public UnityEvent OnUp;
   
 
   public Vector3 RayOrigin;
@@ -34,6 +36,8 @@ public class TouchToRay : MonoBehaviour {
   public float JustUp;
   public Vector2 startPos;
   public Vector2 endPos;
+
+  public Ray ray;
 
   public float startTime;
   public float endTime;
@@ -71,11 +75,20 @@ public class TouchToRay : MonoBehaviour {
       }
     #endif
 
+        RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
+    RayDirection = (Camera.main.transform.position - RayOrigin).normalized;
+
+
+    ray.origin = RayOrigin;
+    ray.direction = -RayDirection;//.normalized;
+
+
       if( Down == 1 && oDown == 0 ){
           JustDown = 1;
           touchID ++;
           startTime = Time.time;
           startPos = p;
+          onDown();
       }
 
       if( Down == 1 && oDown == 1 ){
@@ -87,7 +100,7 @@ public class TouchToRay : MonoBehaviour {
         JustUp = 1;
         endTime = Time.time;
         endPos = p;
-        OnUp();
+        onUp();
       }      
 
       if( Down == 0 && oDown == 0 ){
@@ -97,17 +110,19 @@ public class TouchToRay : MonoBehaviour {
       if( JustDown == 1 ){ oP = p; }
       vel = p - oP;
 
-    RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
-    RayDirection = (Camera.main.transform.position - RayOrigin).normalized;
-
-
-
+  
 
 
 
   }
 
-  void OnUp(){
+  void onDown(){
+    OnDown.Invoke();
+
+  }
+
+  void onUp(){
+    OnUp.Invoke();
     float difT = endTime - startTime;
     Vector2 difP = endPos - startPos;
 
