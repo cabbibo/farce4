@@ -12,6 +12,8 @@
 
 
   SubShader{
+    Tags { "RenderType"="Opaque" "Queue"="Geometry"}
+   // ZWrite On
     Cull Off
     Pass{
 

@@ -17,9 +17,7 @@ public class Leaf : LifeForm {
     Cycles.Insert(1 , constrain );
     Cycles.Insert(2 , verts );
 
-    force._Create();
-    constrain._Create();
-    verts._Create();
+  
 
 }
     public override void Bind(){

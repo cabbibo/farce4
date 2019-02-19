@@ -36,12 +36,13 @@ public class Life : Cycle {
   public event SetValues OnSetValues;
 
   public override void _Create(){
-    DoCreate();
     boundForms = new Dictionary<string, Form>();
     boundInts = new Dictionary<string, int>();
     boundAttributes = new List<BoundAttribute>();
     FindKernel();
     GetNumThreads();
+    
+    DoCreate();
   }
 
   public override void Bind(){}

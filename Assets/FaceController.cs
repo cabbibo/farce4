@@ -41,7 +41,7 @@ public class FaceController : MonoBehaviour
         {
             if (!topologyUpdatedThisFrame)
             {
-                print("setting Topo");
+                //print("setting Topo");
                 SetMeshTopology();
                 makeFaceMesh.transform.position = face.xrFace.pose.position;
                 makeFaceMesh.transform.rotation = face.xrFace.pose.rotation;

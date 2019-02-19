@@ -10,6 +10,8 @@ public class KillIt : MonoBehaviour
 
     public Recorder recorder;
 
+    public Haptico haptics;
+
 
       
     public void Kill(){
@@ -17,9 +19,10 @@ public class KillIt : MonoBehaviour
       RaycastHit hit;
       if (GetComponent<BoxCollider>().Raycast(touch.ray, out hit, 1000000.0f))
       {
+        haptics.TriggerImpactMedium();
         recorder.KillShareBtnPress();
       }else{
-        print("nahBoi");
+//        print("nahBoi");
       }
     }
 

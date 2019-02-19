@@ -7,6 +7,7 @@ public class LensSlider : MonoBehaviour {
 
   public FaceSwitcher switcher;
   public GameObject lensPrefab;
+  public Material iconMat;
   public List<GameObject> lenses;
   public float lockPosition;
   public float anchorPosition;
@@ -28,9 +29,11 @@ public class LensSlider : MonoBehaviour {
 
       GameObject lens = Instantiate( lensPrefab );
 
+
       lens.transform.localScale = Vector3.one * buttonSize;
       lens.transform.position = Vector3.left * index * ( buttonSize + buttonPadding );
       lens.transform.parent = transform;
+      lens.GetComponent<MeshRenderer>().material = iconMat;//SetTexture("_MainTex",l.icon);
       lens.GetComponent<MeshRenderer>().material.SetTexture("_MainTex",l.icon);
       lenses.Add(lens);
 

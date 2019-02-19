@@ -25,11 +25,11 @@ public class LoadFaceMesh : MonoBehaviour {
 
         SerializeMesh data = bf.Deserialize(stream) as SerializeMesh;
 
-        print("loaded");
+//        print("loaded");
         stream.Close();
         return data.GetMesh();//data;
     }else{
-      print("nahhh");
+     // print("nahhh");
       return new Mesh();
     }
 

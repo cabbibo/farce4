@@ -34,9 +34,13 @@ public class Recorder : MonoBehaviour
     public GameObject shareXBtn;
     public GameObject previewCanvas;
     public GameObject iconHolder;
+    public GameObject recordingIcon;
+
+
    
     public Camera recordingCamera;
     public Camera previewCamera;
+    public Camera UICamera;
    
 
     private CameraRecorder cameraRecorder;
@@ -46,40 +50,53 @@ public class Recorder : MonoBehaviour
     public AudioSource audioSrc;
     private string currPath;
 
+    private bool oRecording = false;
+    private bool ooRecording= false;
+
+    public int recordStartFrame;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        recordStartFrame = 20;
         collider = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        ooRecording = oRecording;
+        oRecording = recording;
+
+        recordStartFrame ++;
+        if( recording && recordStartFrame == 3 ){
+            StartRecording();
+        }
         
     }
 
     public void StartRecord(){
 
-      
-            print("yaboi2");
-            recording = true;
-            StartRecording();
-        
-
-
+        recording = true;
+        recordStartFrame = 0;
+        recordingCamera.gameObject.SetActive( true );
+       
+       // StartRecording();
 
     }
 
     public void EndRecord(){
 
       if( recording == true ){
+        ooRecording = false;
+        oRecording = false;
         recording = false;
         StopRecording();
       }
 
-      print( "endRecord");
 
     }
 
@@ -98,12 +115,13 @@ public class Recorder : MonoBehaviour
         var audioFormat = new AudioFormat(microphoneFormat.sampleRate, microphoneFormat.channelCount);
         
         float aspect = Camera.main.aspect;
-        var videoFormat = new VideoFormat(720, (int)(720 / aspect));
+        var videoFormat = new VideoFormat(1080, (int)(1080 / aspect));
         NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnRecordingFinish);
         
-        recordingCamera.gameObject.SetActive( true );
         // Create a camera recorder for the main cam
         cameraRecorder = CameraRecorder.Create(recordingCamera, recordingClock);
+
+        recordingIcon.SetActive( true );
 
 
     }
@@ -113,7 +131,8 @@ public class Recorder : MonoBehaviour
         NatMic.StopRecording();
         // Stop recording
         cameraRecorder.Dispose();
-        recordingCamera.gameObject.SetActive( false );
+        recordingCamera.gameObject.SetActive( false ); 
+        recordingIcon.SetActive( false );
         NatCorder.StopRecording();
     }
 
@@ -135,6 +154,8 @@ public class Recorder : MonoBehaviour
     // Invoked by NatMic on new microphone events
    private void OnSampleBuffer (float[] sampleBuffer, long timestamp) {
         // Send sample buffers directly to NatCorder for recording
+
+       // print( sampleBuffer.Length );
         if ( NatCorder.IsRecording )
             NatCorder.CommitSamples( sampleBuffer, recordingClock.CurrentTimestamp );
     }
@@ -150,6 +171,8 @@ public class Recorder : MonoBehaviour
     IEnumerator playVideo(string src)
     //IEnumerator playVideo()
     {
+
+
 
         //Add VideoPlayer to the GameObject
         //videoPlayer = gameObject.AddComponent<VideoPlayer>();
@@ -205,14 +228,14 @@ public class Recorder : MonoBehaviour
 
 
 
-        Debug.Log("Playing Video");
+        //Debug.Log("Playing Video");
         while (videoPlayer.isPlaying)
         {
-            Debug.LogWarning("Video Time: " + Mathf.FloorToInt((float)videoPlayer.time));
+            //Debug.LogWarning("Video Time: " + Mathf.FloorToInt((float)videoPlayer.time));
             yield return null;
         }
 
-        Debug.Log("Done Playing Video");
+        //Debug.Log("Done Playing Video");
     }
 
     public void KillShareBtnPress()
@@ -261,6 +284,12 @@ public class Recorder : MonoBehaviour
             previewCanvas.SetActive(false);
             iconHolder.SetActive(true);
 
+
+        //previewCamera.gameObject.SetActive( true );
+        UICamera.gameObject.SetActive( false );
+
+        previewCamera.GetComponent<Camera>().enabled = true;
+
         }
         else
         {
@@ -269,6 +298,10 @@ public class Recorder : MonoBehaviour
             shareBtn.SetActive(true);
             previewCanvas.SetActive(true);
             iconHolder.SetActive(false);
+
+
+        UICamera.gameObject.SetActive( true );
+        previewCamera.GetComponent<Camera>().enabled = false; //.SetActive( false );
             
         }
     }

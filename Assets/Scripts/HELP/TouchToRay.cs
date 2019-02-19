@@ -11,6 +11,10 @@ public class Vector2Event : UnityEvent<Vector2>{}
 [System.Serializable]
 public class Vector3Event : UnityEvent<Vector3>{}
 
+
+[System.Serializable]
+public class Vector2FloatEvent : UnityEvent<Vector2,float>{}
+
 [System.Serializable]
 public class FloatEvent : UnityEvent<float>{}
 
@@ -26,6 +30,7 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnTap;
   public UnityEvent OnDown;
   public UnityEvent OnUp;
+  public Vector2FloatEvent WhileDown;
   
 
   public Vector3 RayOrigin;
@@ -93,6 +98,7 @@ public class TouchToRay : MonoBehaviour {
 
       if( Down == 1 && oDown == 1 ){
         JustDown = 0;
+        whileDown();
       }
 
 
@@ -110,10 +116,15 @@ public class TouchToRay : MonoBehaviour {
       if( JustDown == 1 ){ oP = p; }
       vel = p - oP;
 
+
   
 
 
 
+  }
+
+  void whileDown(){
+    WhileDown.Invoke( vel, Time.time-startTime  );
   }
 
   void onDown(){

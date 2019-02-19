@@ -30,17 +30,21 @@ public class PlaceParticlesOnMesh : LifeForm {
 
 
   // Use this for initialization
-  public override void Create(){
+  public override void _Create(){
 
     touch = Camera.main.GetComponent<TouchToRay>();
 
-    Cycles.Insert(1,intersect);
-    Cycles.Insert(2,place);
+    Cycles.Insert(0,place);
+
+    Cycles.Insert(0,intersect);
+    
     Cycles.Insert(0,particles);
+
+    //print("insetring");
     
     mesh = skin.gameObject.GetComponent<MeshFilter>();
   
-
+    DoCreate();
 
   }
 
@@ -95,6 +99,7 @@ public class PlaceParticlesOnMesh : LifeForm {
   }
 
   public override void Activate(){
+    print("loading");
     Saveable.Load(particles,"DNA/"+fileName); 
   }
 

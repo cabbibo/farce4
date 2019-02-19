@@ -16,6 +16,7 @@ public class FaceSwitcher : Cycle {
   public bool allOn;
 
   public int activeFace;
+  public int oActiveFace;
   public int activeFaceMat;
   public int activeBG;
 
@@ -39,17 +40,27 @@ public class FaceSwitcher : Cycle {
 
 
   public void Switch(float val){
-    if( val > 0){
+
+    oActiveFace = activeFace;
+
+
+    if( val < 0){
       activeFace -= 1;
-      if( activeFace < 0 ){ activeFace = lenses.Length-1;}
+      if(activeFace < 0){ activeFace = 0;}
+     // if( activeFace < 0 ){ activeFace = lenses.Length-1;}
 
     }else{
       activeFace += 1;
-      activeFace %= lenses.Length;
+      if(activeFace >= lenses.Length-1 ){ activeFace = lenses.Length-1;}
+
+      //activeFace %= lenses.Length;
     }
 
-  
-    SwitchFace();
+    if( oActiveFace != activeFace ){
+      SwitchFace();
+    }
+
+    
   }
 
   void SwitchFace(){

@@ -62,8 +62,8 @@ public class Interface : MonoBehaviour {
     slider.position = centerPosition;
     slider.rotation = viewpoint.rotation;
     quad.rotation = viewpoint.rotation;
-    quad.position = viewpoint.forward * .02f + bottomLeft - ( bottomLeft-bottomRight) * .5f + ( topLeft-bottomLeft ) * .5f;
-
+    quad.position = viewpoint.forward * .004f + bottomLeft - ( bottomLeft-bottomRight) * .5f + ( topLeft-bottomLeft ) * .5f;
+    quad.localScale = transform.localScale;
 
     borderLine.SetPosition( 0 , bottomLeft );
     borderLine.SetPosition( 1 , bottomRight );
