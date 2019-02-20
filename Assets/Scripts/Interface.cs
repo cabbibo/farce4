@@ -13,6 +13,9 @@ public class Interface : MonoBehaviour {
   public float border;
   public Transform viewpoint;
   public Transform slider;
+  public Transform tutorialHolder;
+  public Transform yuck;
+  public Transform yum;
   public Transform quad;
 
   private float _ratio;
@@ -58,21 +61,6 @@ public class Interface : MonoBehaviour {
     topRight = Camera.main.ViewportToWorldPoint(new Vector3(1-border,1-_ratio * border,distance));
 
 
-    centerPosition = bottomLeft-(bottomLeft - bottomRight)* .5f+ up * .04f;
-    slider.position = centerPosition;
-    slider.rotation = viewpoint.rotation;
-    quad.rotation = viewpoint.rotation;
-    quad.position = viewpoint.forward * .004f + bottomLeft - ( bottomLeft-bottomRight) * .5f + ( topLeft-bottomLeft ) * .5f;
-    quad.localScale = transform.localScale;
-
-    borderLine.SetPosition( 0 , bottomLeft );
-    borderLine.SetPosition( 1 , bottomRight );
-    borderLine.SetPosition( 2 , topRight );
-    borderLine.SetPosition( 3 , topLeft );
-    borderLine.SetPosition( 4 , bottomLeft );
-
-    transform.localPosition = new Vector3( 0, 0, distance);
-    transform.localRotation = Quaternion.identity;
     normal = transform.forward;
 
 
@@ -88,6 +76,31 @@ public class Interface : MonoBehaviour {
 
     cam.transform.position = tmpP;
     cam.transform.rotation = tmpR;
+
+
+
+    centerPosition = bottomLeft-(bottomLeft - bottomRight)* .5f+ up * .02f;
+    slider.position = centerPosition;
+    slider.rotation = viewpoint.rotation;
+    //quad.rotation = viewpoint.rotation;
+    //quad.position = viewpoint.forward * .00001f + bottomLeft - ( bottomLeft-bottomRight) * .5f + ( topLeft-bottomLeft ) * .5f;
+    //quad.localScale = transform.localScale;
+
+
+    tutorialHolder.rotation = viewpoint.rotation;
+    tutorialHolder.position = topLeft-(topLeft - topRight)* .5f - up * .02f;
+
+    borderLine.SetPosition( 0 , bottomLeft );
+    borderLine.SetPosition( 1 , bottomRight );
+    borderLine.SetPosition( 2 , topRight );
+    borderLine.SetPosition( 3 , topLeft );
+    borderLine.SetPosition( 4 , bottomLeft );
+
+    transform.localPosition = new Vector3( 0, 0, distance);
+    transform.localRotation = Quaternion.identity;
+
+
+
 
   }
 

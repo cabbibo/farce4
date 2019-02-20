@@ -57,7 +57,7 @@
 
                 col *= _Color;
                 if( col.a < 0.5 ){
-                    discard;
+                //    discard;
                 }
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);

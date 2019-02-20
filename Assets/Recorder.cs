@@ -27,6 +27,7 @@ public class Recorder : MonoBehaviour
     public BoxCollider collider;
 
     public bool recording;
+    public Haptico haptics;
 
 
     public GameObject recordBtn;
@@ -39,7 +40,7 @@ public class Recorder : MonoBehaviour
 
    
     public Camera recordingCamera;
-    public Camera previewCamera;
+    //public Camera previewCamera;
     public Camera UICamera;
    
 
@@ -54,6 +55,9 @@ public class Recorder : MonoBehaviour
     private bool ooRecording= false;
 
     public int recordStartFrame;
+
+    public bool saveable = false;
+    public bool previewing = false;
 
 
 
@@ -82,7 +86,7 @@ public class Recorder : MonoBehaviour
 
         recording = true;
         recordStartFrame = 0;
-        recordingCamera.gameObject.SetActive( true );
+        //recordingCamera.gameObject.SetActive( true );
        
        // StartRecording();
 
@@ -115,13 +119,14 @@ public class Recorder : MonoBehaviour
         var audioFormat = new AudioFormat(microphoneFormat.sampleRate, microphoneFormat.channelCount);
         
         float aspect = Camera.main.aspect;
-        var videoFormat = new VideoFormat(1080, (int)(1080 / aspect));
+        var videoFormat = new VideoFormat(720, (int)(720 / aspect));
         NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnRecordingFinish);
         
         // Create a camera recorder for the main cam
         cameraRecorder = CameraRecorder.Create(recordingCamera, recordingClock);
 
-        recordingIcon.SetActive( true );
+       // recordingIcon.SetActive( true );
+        iconHolder.SetActive( false );
 
 
     }
@@ -131,8 +136,8 @@ public class Recorder : MonoBehaviour
         NatMic.StopRecording();
         // Stop recording
         cameraRecorder.Dispose();
-        recordingCamera.gameObject.SetActive( false ); 
-        recordingIcon.SetActive( false );
+        //recordingCamera.gameObject.SetActive( false ); 
+        //recordingIcon.SetActive( false );
         NatCorder.StopRecording();
     }
 
@@ -171,6 +176,7 @@ public class Recorder : MonoBehaviour
     IEnumerator playVideo(string src)
     //IEnumerator playVideo()
     {
+
 
 
 
@@ -240,16 +246,31 @@ public class Recorder : MonoBehaviour
 
     public void KillShareBtnPress()
     {
-        ToggleRecordUI(true);
-        Debug.Log( "deactivate canavs");
+
+
+        if( saveable == true ){
+
+            print("haza1");
+            ToggleRecordUI(true);
+            Debug.Log( "deactivate canavs");
+        }else{
+            print("nonsave");
+        }
     }
 
     public void ShareBtnPress()
     {
-        videoPlayer.Pause();
-        audioSrc.Pause();
 
-        StartCoroutine(HandleShare());
+        if( saveable == true ){
+            print("haza");
+            videoPlayer.Pause();
+            audioSrc.Pause();
+            haptics.TriggerSuccess();
+            StartCoroutine(HandleShare());
+            KillShareBtnPress();
+        }else{
+            print( "nonsaveeee");
+        }
 
     }
 
@@ -284,15 +305,22 @@ public class Recorder : MonoBehaviour
             previewCanvas.SetActive(false);
             iconHolder.SetActive(true);
 
+            saveable = false;
+            previewing = false;
 
-        //previewCamera.gameObject.SetActive( true );
-        UICamera.gameObject.SetActive( false );
 
-        previewCamera.GetComponent<Camera>().enabled = true;
+
+            haptics.TriggerSuccess();
+            //previewCamera.gameObject.SetActive( true );
+            // UICamera.gameObject.SetActive( false );
+           // recordingCamera.GetComponent<Camera>().enabled = true;
 
         }
         else
         {
+
+            saveable = true;
+            previewing = true;
             recordBtn.SetActive(false);
             shareXBtn.SetActive(true);
             shareBtn.SetActive(true);
@@ -300,8 +328,8 @@ public class Recorder : MonoBehaviour
             iconHolder.SetActive(false);
 
 
-        UICamera.gameObject.SetActive( true );
-        previewCamera.GetComponent<Camera>().enabled = false; //.SetActive( false );
+            //UICamera.gameObject.SetActive( true );
+            //recordingCamera.GetComponent<Camera>().enabled = false; //.SetActive( false );
             
         }
     }

@@ -7,6 +7,9 @@ public class FaceSwitcher : Cycle {
 
   public Lens[] lenses;
   public MakeFaceMesh faceMesh;
+  public Recorder recording;
+
+    public Haptico haptics;
 
   public MeshRenderer face;
   //public UnityARVideo bg;
@@ -41,17 +44,33 @@ public class FaceSwitcher : Cycle {
 
   public void Switch(float val){
 
+if( recording.previewing == false ){
     oActiveFace = activeFace;
 
 
     if( val < 0){
       activeFace -= 1;
-      if(activeFace < 0){ activeFace = 0;}
-     // if( activeFace < 0 ){ activeFace = lenses.Length-1;}
+      if(activeFace < 0){ 
+        activeFace = 0;
+
+         haptics.TriggerWarning();
+
+      }else{
+
+        haptics.TriggerSelectionChange();
+      }
+      //if( activeFace < 0 ){ activeFace = lenses.Length-1;}
 
     }else{
       activeFace += 1;
-      if(activeFace >= lenses.Length-1 ){ activeFace = lenses.Length-1;}
+      if(activeFace >= lenses.Length-1 ){ 
+      
+         haptics.TriggerWarning();
+         activeFace = lenses.Length-1;
+       }else{
+
+    haptics.TriggerSelectionChange();
+       }
 
       //activeFace %= lenses.Length;
     }
@@ -60,6 +79,8 @@ public class FaceSwitcher : Cycle {
       SwitchFace();
     }
 
+
+}
     
   }
 

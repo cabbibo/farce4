@@ -18,6 +18,7 @@ public class LensSlider : MonoBehaviour {
 
   public float buttonSize;
   public float buttonPadding;
+  public float invisibility;
 
 
 
@@ -33,8 +34,11 @@ public class LensSlider : MonoBehaviour {
       lens.transform.localScale = Vector3.one * buttonSize;
       lens.transform.position = Vector3.left * index * ( buttonSize + buttonPadding );
       lens.transform.parent = transform;
-      lens.GetComponent<MeshRenderer>().material = iconMat;//SetTexture("_MainTex",l.icon);
-      lens.GetComponent<MeshRenderer>().material.SetTexture("_MainTex",l.icon);
+      //lens.GetComponent<MeshRenderer>().material = iconMat;//SetTexture("_MainTex",l.icon);
+      //lens.GetComponent<MeshRenderer>().material.SetTexture("_MainTex",l.icon);
+      lens.GetComponent<MeshRenderer>().enabled = true;//material.SetTexture("_MainTex",l.icon);
+      lens.GetComponent<TextMesh>().text = l.gameObject.name;
+
       lenses.Add(lens);
 
       index ++;
@@ -61,9 +65,14 @@ public class LensSlider : MonoBehaviour {
       pos = -maxDist;
     }
 
+
+
+
     foreach(GameObject l in lenses){
       float dif = l.transform.localPosition.x - pos;
-      l.transform.localScale = Vector3.one * (( buttonSize / Mathf.Max(.5f,(Mathf.Abs(dif) * 50))) );//l.transform.localPosition.x
+      l.transform.localScale = (1-invisibility) * Vector3.one * (( buttonSize / Mathf.Max(.5f,(Mathf.Abs(dif) * 50))) );//l.transform.localPosition.x
+    
+
     }
 
     transform.localPosition = Vector3.left * pos; // velocity;
