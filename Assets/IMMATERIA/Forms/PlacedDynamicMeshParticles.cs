@@ -24,7 +24,7 @@ public class PlacedDynamicMeshParticles: Particles {
 
   };
 
-  public override void SetStructSize(){ structSize = 24; }
+  public override void SetStructSize(){  structSize = 24; }
 
 
 

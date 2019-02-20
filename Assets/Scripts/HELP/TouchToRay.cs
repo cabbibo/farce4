@@ -11,6 +11,10 @@ public class Vector2Event : UnityEvent<Vector2>{}
 [System.Serializable]
 public class Vector3Event : UnityEvent<Vector3>{}
 
+
+[System.Serializable]
+public class Vector2FloatEvent : UnityEvent<Vector2,float>{}
+
 [System.Serializable]
 public class FloatEvent : UnityEvent<float>{}
 
@@ -24,6 +28,9 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnSwipeUp;
   public UnityEvent OnSwipeDown;
   public UnityEvent OnTap;
+  public UnityEvent OnDown;
+  public UnityEvent OnUp;
+  public Vector2FloatEvent WhileDown;
   
 
   public Vector3 RayOrigin;
@@ -34,6 +41,8 @@ public class TouchToRay : MonoBehaviour {
   public float JustUp;
   public Vector2 startPos;
   public Vector2 endPos;
+
+  public Ray ray;
 
   public float startTime;
   public float endTime;
@@ -71,15 +80,25 @@ public class TouchToRay : MonoBehaviour {
       }
     #endif
 
+        RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
+    RayDirection = (Camera.main.transform.position - RayOrigin).normalized;
+
+
+    ray.origin = RayOrigin;
+    ray.direction = -RayDirection;//.normalized;
+
+
       if( Down == 1 && oDown == 0 ){
           JustDown = 1;
           touchID ++;
           startTime = Time.time;
           startPos = p;
+          onDown();
       }
 
       if( Down == 1 && oDown == 1 ){
         JustDown = 0;
+        whileDown();
       }
 
 
@@ -87,7 +106,7 @@ public class TouchToRay : MonoBehaviour {
         JustUp = 1;
         endTime = Time.time;
         endPos = p;
-        OnUp();
+        onUp();
       }      
 
       if( Down == 0 && oDown == 0 ){
@@ -97,17 +116,24 @@ public class TouchToRay : MonoBehaviour {
       if( JustDown == 1 ){ oP = p; }
       vel = p - oP;
 
-    RayOrigin = Camera.main.ScreenToWorldPoint( new Vector3( p.x , p.y , Camera.main.nearClipPlane ) );
-    RayDirection = (Camera.main.transform.position - RayOrigin).normalized;
 
-
-
+  
 
 
 
   }
 
-  void OnUp(){
+  void whileDown(){
+    WhileDown.Invoke( vel, Time.time-startTime  );
+  }
+
+  void onDown(){
+    OnDown.Invoke();
+
+  }
+
+  void onUp(){
+    OnUp.Invoke();
     float difT = endTime - startTime;
     Vector2 difP = endPos - startPos;
 

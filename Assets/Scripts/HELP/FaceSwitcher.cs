@@ -7,6 +7,9 @@ public class FaceSwitcher : Cycle {
 
   public Lens[] lenses;
   public MakeFaceMesh faceMesh;
+  public Recorder recording;
+
+    public Haptico haptics;
 
   public MeshRenderer face;
   //public UnityARVideo bg;
@@ -16,6 +19,7 @@ public class FaceSwitcher : Cycle {
   public bool allOn;
 
   public int activeFace;
+  public int oActiveFace;
   public int activeFaceMat;
   public int activeBG;
 
@@ -39,23 +43,59 @@ public class FaceSwitcher : Cycle {
 
 
   public void Switch(float val){
-    if( val > 0){
+
+if( recording.previewing == false ){
+    oActiveFace = activeFace;
+
+
+    if( val < 0){
       activeFace -= 1;
+     // if(activeFace < 0){ 
+      //  activeFace = 0;
+
+      //   haptics.TriggerWarning();
+
+     // }else{
+
+        haptics.TriggerSelectionChange();
+     // }
       if( activeFace < 0 ){ activeFace = lenses.Length-1;}
 
     }else{
       activeFace += 1;
+      //if(activeFace >= lenses.Length-1 ){ 
+      
+      //   haptics.TriggerWarning();
+      //   activeFace = lenses.Length-1;
+       //}else{
+
+        haptics.TriggerSelectionChange();
+      // }
+
       activeFace %= lenses.Length;
     }
 
-  
-    SwitchFace();
+    if( oActiveFace != activeFace ){
+      SwitchFace();
+    }
+
+
+}
+    
   }
 
   void SwitchFace(){
 
-  slider.Switch( activeFace );
-    for( int i = 0; i < lenses.Length; i++ ){
+
+      if(oActiveFace == 0 && activeFace == lenses.Length-1){
+        slider.SwitchWithPos(lenses.Length-1 , -1);
+      }else if( activeFace == 0 && oActiveFace == lenses.Length-1){
+        slider.SwitchWithPos(0, 1);
+      }else{
+        slider.Switch( activeFace );
+      }
+   
+      for( int i = 0; i < lenses.Length; i++ ){
         if( allOn ){
          lenses[i]._Deactivate();
         }  

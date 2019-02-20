@@ -41,10 +41,17 @@ public class Cycle : MonoBehaviour{
   protected void DoCreate(){
 
     //_Destroy();
-    SetStates();
+   // SetStates();
+  //  print( this );
+
+    //print("DOCREAS");
 
     if( created ){ DebugThis("Created Multiple Times"); }
     if( debug ){ DebugThis("DoCreate"); }
+
+    destroyed = false;
+    created = true;
+
     Create();
 
     foreach( Cycle c in Cycles ){
@@ -52,11 +59,10 @@ public class Cycle : MonoBehaviour{
         DebugThis( "SOME CYCLE NULL");
       }
 
+   //   print(this);
       c._Create();
     }
 
-    destroyed = false;
-    created = true;
 
   }
 
@@ -300,7 +306,7 @@ public virtual void Deactivate(){}
 
 
 void SetStates(){
-      created = false;
+    created = false;
     begunGestation = false;
     gestating = false;
     gestated = false;

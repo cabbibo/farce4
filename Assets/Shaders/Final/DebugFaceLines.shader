@@ -35,15 +35,7 @@ Shader "Final/DebugFaceLines"
 				"LightMode" = "ForwardBase" // allows shadow rec/cast
 			}
 
-			// Write to Stencil buffer (so that outline pass can read)
-			Stencil
-			{
-				Ref 5
-				Comp always
-				Pass replace
-				ZFail keep
-			}
-
+	
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

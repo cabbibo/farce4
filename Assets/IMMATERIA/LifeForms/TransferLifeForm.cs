@@ -8,6 +8,7 @@ public class TransferLifeForm : MeshLifeForm {
   public Body body;
   public bool showBody;
   public Form skeleton;
+  public float radius;
 
     public float[] transformArray;
 
@@ -36,6 +37,7 @@ public class TransferLifeForm : MeshLifeForm {
     transfer.BindAttribute("_CameraRight" , "right" , this); 
     transfer.BindAttribute("_CameraUp" , "up" , this); 
     transfer.BindAttribute("_CameraForward" , "forward" , this); 
+    transfer.BindAttribute("_Radius" , "radius" , this); 
 
     transfer.BindAttribute("_TransformBase","transformArray", this);
     

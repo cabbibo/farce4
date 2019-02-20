@@ -6,7 +6,7 @@ public class HairNoise : Cycle {
 
   public Life toBind;
 
-    public float noiseSize;
+  public float noiseSize;
   public float noiseSpeed;
   public float noiseForce;
   public float normalForce;
@@ -25,10 +25,6 @@ public class HairNoise : Cycle {
     toBind.BindAttribute( "_UpForce" , "upForce" , this );
   }
   
-  // Update is called once per frame
-  void Update () {
-    
-  }
 
 
 }

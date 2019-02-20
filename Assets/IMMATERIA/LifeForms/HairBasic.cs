@@ -30,15 +30,10 @@ public class HairBasic : LifeForm {
     Cycles.Insert( 1 , HairCollision );
     Cycles.Insert( 2 , HairConstraint0 );
     Cycles.Insert( 3 , HairConstraint1 );
+    Cycles.Insert( 4 , Hair );
 
-    Cycles.Insert( 4 , Base );
-    Cycles.Insert( 5 , Hair );
+    //Cycles.Insert( 4 , Base );
 
-
-    SetHairPosition._Create();
-    HairCollision._Create();
-    HairConstraint0._Create();
-    HairConstraint1._Create();
 
   }
 
