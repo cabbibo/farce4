@@ -24,6 +24,8 @@ public class RecordIt : MonoBehaviour
     public GameObject plarnt;
     public LensSlider icons;
 
+    public Tutorials tut;
+
 
 
     private float baseScale;
@@ -55,6 +57,9 @@ public class RecordIt : MonoBehaviour
       r1.material.SetColor("_Color", Color.Lerp( Color.white , Color.red , v * v ));
       r2.material.SetColor("_Color", Color.Lerp( Color.white , Color.red , v * v ));
 
+      float bs =  (1-v) * tut.holdToRecord.baseScale;
+      tut.holdToRecord.transform.localScale = new Vector3( bs,bs,bs);
+
     }
 
     public void ResetScale(){
@@ -67,7 +72,15 @@ icons.invisibility = 0;
       farcePlarnt.transform.localScale = new Vector3(0,0,0);// v*v*endScale;
       r1.material.SetColor("_Color", Color.white);
       r2.material.SetColor("_Color", Color.white);
+    
+      if( tut.holdToRecord.active ){
+        float bs =  tut.holdToRecord.baseScale;
+        tut.holdToRecord.transform.localScale = new Vector3( bs,bs,bs);
+      }
+
     }
+
+
 
     public void fullStart(){
 
@@ -82,6 +95,7 @@ icons.invisibility = 1;
       r1.material.SetColor("_Color",Color.green);
       r2.material.SetColor("_Color",Color.green);
 
+      tut.holdToRecord.HardDeactivate();
       recorder.StartRecord();
     }
       

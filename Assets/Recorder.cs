@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -38,6 +39,8 @@ public class Recorder : MonoBehaviour
     public GameObject recordingIcon;
 
 
+
+
    
     public Camera recordingCamera;
     //public Camera previewCamera;
@@ -58,6 +61,15 @@ public class Recorder : MonoBehaviour
 
     public bool saveable = false;
     public bool previewing = false;
+
+
+
+    public UnityEvent StartRecordEvent;
+    public UnityEvent EndRecordEvent;
+    public UnityEvent SaveRecordingEvent;
+    public UnityEvent KillRecordingEvent;
+    public UnityEvent PlaybackScreenStartEvent;
+
 
 
 
@@ -107,6 +119,7 @@ public class Recorder : MonoBehaviour
 
     public void StartRecording () {
 
+        StartRecordEvent.Invoke();
         // Start the microphone
         var microphoneFormat = Format.Default;
        // device, format, OnSampleBuffer
@@ -129,6 +142,7 @@ public class Recorder : MonoBehaviour
         iconHolder.SetActive( false );
 
 
+
     }
 
     public void StopRecording () {
@@ -139,6 +153,7 @@ public class Recorder : MonoBehaviour
         //recordingCamera.gameObject.SetActive( false ); 
         //recordingIcon.SetActive( false );
         NatCorder.StopRecording();
+        EndRecordEvent.Invoke();
     }
 
 
@@ -180,6 +195,7 @@ public class Recorder : MonoBehaviour
 
 
 
+
         //Add VideoPlayer to the GameObject
         //videoPlayer = gameObject.AddComponent<VideoPlayer>();
 
@@ -189,7 +205,7 @@ public class Recorder : MonoBehaviour
         //Disable Play on Awake for both Video and Audio
         videoPlayer.playOnAwake = false;
         audioSrc.playOnAwake = false;
-        audioSrc.Pause();
+        //audioSrc.Pause();
 
         //We want to play from video clip not from url
 
@@ -201,13 +217,7 @@ public class Recorder : MonoBehaviour
         videoPlayer.url = src;
 
 
-        //Set Audio Output to AudioSource
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
-        //Assign the Audio from Video to AudioSource to be played
-        videoPlayer.EnableAudioTrack(0, true);
-        videoPlayer.SetTargetAudioSource(0, audioSrc);
-
+      
         //Set video To Play then prepare Audio to prevent Buffering
         //videoPlayer.clip = videoToPlay;
         videoPlayer.Prepare();
@@ -218,7 +228,14 @@ public class Recorder : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Done Preparing Video");
+
+
+  //Set Audio Output to AudioSource
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+        //Assign the Audio from Video to AudioSource to be played
+        videoPlayer.EnableAudioTrack(0, true);
+        videoPlayer.SetTargetAudioSource(0, audioSrc);
 
 
         //Assign the Texture from Video to RawImage to be displayed
@@ -230,8 +247,11 @@ public class Recorder : MonoBehaviour
         videoPlayer.isLooping = true;
 
         //Play Sound
+        audioSrc.volume = 1;
         audioSrc.Play();
+        audioSrc.loop = true;
 
+        PlaybackScreenStartEvent.Invoke();
 
 
         //Debug.Log("Playing Video");
@@ -250,9 +270,9 @@ public class Recorder : MonoBehaviour
 
         if( saveable == true ){
 
-            print("haza1");
             ToggleRecordUI(true);
-            Debug.Log( "deactivate canavs");
+            KillRecordingEvent.Invoke();
+
         }else{
             print("nonsave");
         }
@@ -262,9 +282,10 @@ public class Recorder : MonoBehaviour
     {
 
         if( saveable == true ){
-            print("haza");
+            SaveRecordingEvent.Invoke();
             videoPlayer.Pause();
-            audioSrc.Pause();
+           // audioSrc.Pause();
+            audioSrc.volume = 0;
             haptics.TriggerSuccess();
             StartCoroutine(HandleShare());
             KillShareBtnPress();
@@ -283,7 +304,7 @@ public class Recorder : MonoBehaviour
     private void OnShare()
     {
         videoPlayer.Play();
-        audioSrc.Play();
+        audioSrc.volume = 1;
     }
 
     private void ToggleRecordUI(bool showRecordingUI)
@@ -295,13 +316,14 @@ public class Recorder : MonoBehaviour
            // NatCam.StartPreview(DeviceCamera.FrontCamera ?? DeviceCamera.RearCamera, OnPreviewStart);
 
             videoPlayer.Stop();
-            audioSrc.Stop();
+           // audioSrc.Stop();
+            audioSrc.volume = 0;
 
 
 
-            recordBtn.SetActive(true);
-            shareXBtn.SetActive(false);
-            shareBtn.SetActive(false);
+            //recordBtn.SetActive(true);
+            //shareXBtn.SetActive(false);
+            //shareBtn.SetActive(false);
             previewCanvas.SetActive(false);
             iconHolder.SetActive(true);
 
@@ -321,9 +343,9 @@ public class Recorder : MonoBehaviour
 
             saveable = true;
             previewing = true;
-            recordBtn.SetActive(false);
-            shareXBtn.SetActive(true);
-            shareBtn.SetActive(true);
+            //recordBtn.SetActive(false);
+            //shareXBtn.SetActive(true);
+            //shareBtn.SetActive(true);
             previewCanvas.SetActive(true);
             iconHolder.SetActive(false);
 

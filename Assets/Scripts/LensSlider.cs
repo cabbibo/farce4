@@ -20,6 +20,8 @@ public class LensSlider : MonoBehaviour {
   public float buttonPadding;
   public float invisibility;
 
+  public float offsetVal;
+
 
 
 	// Use this for initialization
@@ -49,8 +51,16 @@ public class LensSlider : MonoBehaviour {
 
   public void Switch(int id){
     anchorPosition = (float)id * ( buttonSize + buttonPadding );
+    //SwitchWithPos( id , 1 );
   }
 	
+  public void SwitchWithPos( int id  , float dif){
+
+    anchorPosition = (float)id * ( buttonSize + buttonPadding );
+    velocity = 0;
+    pos = -anchorPosition;
+    pos += dif * offsetVal;
+  }
 	// Update is called once per frame
 	void FixedUpdate() {
 
@@ -71,8 +81,6 @@ public class LensSlider : MonoBehaviour {
     foreach(GameObject l in lenses){
       float dif = l.transform.localPosition.x - pos;
       l.transform.localScale = (1-invisibility) * Vector3.one * (( buttonSize / Mathf.Max(.5f,(Mathf.Abs(dif) * 50))) );//l.transform.localPosition.x
-    
-
     }
 
     transform.localPosition = Vector3.left * pos; // velocity;

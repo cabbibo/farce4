@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/MAIN.unity
     guid: ed848713dcd5e644a955cfc3b05f7dbe
   - enabled: 0
-    path: Assets/iOSHapticFeedback/Scenes/iOSHapticFeedbackExampleScene.unity
+    path: Assets/Materials/iOSHapticFeedback/Scenes/iOSHapticFeedbackExampleScene.unity
     guid: 416084cd217d04eb087adaf4b7da578b
   m_configObjects:
     com.unity.xr.arkit.PlayerSettings: {fileID: 11400000, guid: 2d5fb8e61571b4e3897f221189089fd6,

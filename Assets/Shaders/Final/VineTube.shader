@@ -24,7 +24,7 @@
             // Write to Stencil buffer (so that outline pass can read)
       Stencil
       {
-        Ref 20
+        Ref 12
         Comp always
         Pass replace
         ZFail keep
@@ -69,7 +69,6 @@
         UNITY_INITIALIZE_OUTPUT(varyings, o);
 
 
-#if defined(SHADER_API_METAL)
 				float3 fPos 	= _TransferBuffer[id].pos;
         float3 fNor   = _TransferBuffer[id].nor;
 				float3 fVel 	= _TransferBuffer[id].vel;
@@ -89,7 +88,7 @@
 				o.debug = float3(debug.x,debug.y,0);
 
 				UNITY_TRANSFER_SHADOW(o,o.worldPos);
-#endif
+
 				return o;
 			}
 
@@ -191,7 +190,7 @@ sampler2D _MainTex;
       ZTest ON
       Stencil
       {
-        Ref 20
+        Ref 12
         Comp notequal
         Fail keep
         Pass replace

@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class RibbonHairTransfer : TransferLifeForm {
   
-  public float radius;
-
-  
-  public override void Bind(){
-    transfer.BindAttribute( "_Radius" , "radius" , this );
+   public override void Bind(){
     transfer.BindAttribute( "_RibbonLength" , "length" , verts );
     transfer.BindAttribute( "_NumVertsPerHair" , "numVertsPerHair" , skeleton );
   }

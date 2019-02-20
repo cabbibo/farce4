@@ -50,29 +50,29 @@ if( recording.previewing == false ){
 
     if( val < 0){
       activeFace -= 1;
-      if(activeFace < 0){ 
-        activeFace = 0;
+     // if(activeFace < 0){ 
+      //  activeFace = 0;
 
-         haptics.TriggerWarning();
+      //   haptics.TriggerWarning();
 
-      }else{
+     // }else{
 
         haptics.TriggerSelectionChange();
-      }
-      //if( activeFace < 0 ){ activeFace = lenses.Length-1;}
+     // }
+      if( activeFace < 0 ){ activeFace = lenses.Length-1;}
 
     }else{
       activeFace += 1;
-      if(activeFace >= lenses.Length-1 ){ 
+      //if(activeFace >= lenses.Length-1 ){ 
       
-         haptics.TriggerWarning();
-         activeFace = lenses.Length-1;
-       }else{
+      //   haptics.TriggerWarning();
+      //   activeFace = lenses.Length-1;
+       //}else{
 
-    haptics.TriggerSelectionChange();
-       }
+        haptics.TriggerSelectionChange();
+      // }
 
-      //activeFace %= lenses.Length;
+      activeFace %= lenses.Length;
     }
 
     if( oActiveFace != activeFace ){
@@ -86,8 +86,16 @@ if( recording.previewing == false ){
 
   void SwitchFace(){
 
-  slider.Switch( activeFace );
-    for( int i = 0; i < lenses.Length; i++ ){
+
+      if(oActiveFace == 0 && activeFace == lenses.Length-1){
+        slider.SwitchWithPos(lenses.Length-1 , -1);
+      }else if( activeFace == 0 && oActiveFace == lenses.Length-1){
+        slider.SwitchWithPos(0, 1);
+      }else{
+        slider.Switch( activeFace );
+      }
+   
+      for( int i = 0; i < lenses.Length; i++ ){
         if( allOn ){
          lenses[i]._Deactivate();
         }  
