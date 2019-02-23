@@ -1053,6 +1053,7 @@ GameObject:
   - component: {fileID: 257846571}
   - component: {fileID: 257846578}
   - component: {fileID: 257846573}
+  - component: {fileID: 257846576}
   m_Layer: 0
   m_Name: Face
   m_TagString: FACE
@@ -1292,6 +1293,18 @@ MonoBehaviour:
   totalMemory: 0
   debugMaterial: {fileID: 2100000, guid: bfdba931e444ed946a647d01a3fac6e5, type: 2}
   mesh: {fileID: 257846572}
+--- !u!114 &257846576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257846567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a4735647b8d44bbc92c1059bb7afc2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &257846578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2460,6 +2473,34 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 808740437}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &554214311 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6872318215491801757, guid: 3779f625a2795476fbb5b208fec5a8e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 808740437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554214309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 816b289ef451e094f9ae174fb4cf8db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &554214312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554214309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ecf5a6fbc65848c8907525dac4e8dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 471826633}
+  bg: {fileID: 554214311}
+  mat1: {fileID: 2100000, guid: a5a3a8f0946b24b04ac3e24e113221e3, type: 2}
+  mat2: {fileID: 2100000, guid: 2fcadc4d141624ca58d14d856ab23dc8, type: 2}
 --- !u!4 &554214314 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6872318215491801759, guid: 3779f625a2795476fbb5b208fec5a8e8,
@@ -3904,8 +3945,18 @@ PrefabInstance:
     - target: {fileID: 6872318215491801757, guid: 3779f625a2795476fbb5b208fec5a8e8,
         type: 3}
       propertyPath: m_UseCustomMaterial
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6872318215491801757, guid: 3779f625a2795476fbb5b208fec5a8e8,
+        type: 3}
+      propertyPath: m_UseCustomRendererAsset
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6872318215491801757, guid: 3779f625a2795476fbb5b208fec5a8e8,
+        type: 3}
+      propertyPath: m_CustomMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: a5a3a8f0946b24b04ac3e24e113221e3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3779f625a2795476fbb5b208fec5a8e8, type: 3}
 --- !u!114 &823376852 stripped
@@ -7389,7 +7440,7 @@ MonoBehaviour:
   icon: {fileID: 2800000, guid: 546c70cccc0f24e14b76d3ada586b837, type: 3}
   BlitMaterial: {fileID: 0}
   FaceMaterial: {fileID: 2100000, guid: aed150f182ffe7549a5c4e25799d49c4, type: 2}
-  BackgroundMaterial: {fileID: 2100000, guid: 5d42cf00dbc7b48eaab4bbcac6cea106, type: 2}
+  BackgroundMaterial: {fileID: 2100000, guid: a5a3a8f0946b24b04ac3e24e113221e3, type: 2}
   background: {fileID: 0}
   skybox: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!4 &1685525618
@@ -8757,6 +8808,6 @@ MonoBehaviour:
   icon: {fileID: 2800000, guid: 546c70cccc0f24e14b76d3ada586b837, type: 3}
   BlitMaterial: {fileID: 0}
   FaceMaterial: {fileID: 2100000, guid: aed150f182ffe7549a5c4e25799d49c4, type: 2}
-  BackgroundMaterial: {fileID: 2100000, guid: 5d42cf00dbc7b48eaab4bbcac6cea106, type: 2}
+  BackgroundMaterial: {fileID: 2100000, guid: a5a3a8f0946b24b04ac3e24e113221e3, type: 2}
   background: {fileID: 0}
   skybox: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}

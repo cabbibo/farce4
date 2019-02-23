@@ -25,7 +25,7 @@
     h + float3( 3.0, 2.0, 1.0 ) / 3.0 ) * 6.0 - 3.0 ) - 1.0 ), 0.0, 1.0 ), s ) * v;
 }
 
-			float4x4 _DisplayTransform;
+			float4x4 _UnityDisplayTransform;
 
 			struct Vertex
 			{
@@ -48,8 +48,8 @@
 				float texX = vertex.texcoord.x;
 				float texY = vertex.texcoord.y;
 				
-				o.texcoord.x = (_DisplayTransform[0].x * texX + _DisplayTransform[1].x * (texY) + _DisplayTransform[2].x);
- 			 	o.texcoord.y = (_DisplayTransform[0].y * texX + _DisplayTransform[1].y * (texY) + (_DisplayTransform[2].y));
+				o.texcoord.x = (_UnityDisplayTransform[0].x * texX + _UnityDisplayTransform[1].x * (texY) + _UnityDisplayTransform[2].x);
+ 			 	o.texcoord.y = (_UnityDisplayTransform[0].y * texX + _UnityDisplayTransform[1].y * (texY) + (_UnityDisplayTransform[2].y));
 	            
 	      o.uv = vertex.position.xy;
 				return o;
@@ -64,8 +64,8 @@
 				// sample the texture
                 float2 texcoord = i.texcoord;
 
-					float v = sin(i.uv.x*30 )+sin(i.uv.x * 100)+sin(i.uv.y*30)+sin(i.uv.y * 40+i.uv.y * 10);
-					v *= .005 * sin(i.uv.x * 20);
+					float v = sin(i.uv.x*10 + 3 + _Time.y )+sin(i.uv.x * 10+ _Time.y*2)+sin(i.uv.y*4+.3+ _Time.y*1.2)+sin(i.uv.y * 3+i.uv.y * 2 + .4 + + _Time.x * 4);
+					v *= .02 * sin(i.uv.x * 5 + _Time.y * .9 + 1.414);
                 float y = tex2D(_textureY, texcoord + v ).r;
 
                 float4 ycbcr = float4(y, tex2D(_textureCbCr, texcoord +v).rg, 1.0);

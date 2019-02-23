@@ -21,7 +21,8 @@
 			
 			#include "UnityCG.cginc"
 
-			float4x4 _DisplayTransform;
+			
+            float4x4 _UnityDisplayTransform;
 
 			struct Vertex
 			{
@@ -45,8 +46,8 @@
 				float texX = vertex.texcoord.x;
 				float texY = vertex.texcoord.y;
 				
-				o.texcoord.x = (_DisplayTransform[0].x * texX + _DisplayTransform[1].x * (texY) + _DisplayTransform[2].x);
- 			 	o.texcoord.y = (_DisplayTransform[0].y * texX + _DisplayTransform[1].y * (texY) + (_DisplayTransform[2].y));
+				o.texcoord.x = (_UnityDisplayTransform[0].x * texX + _UnityDisplayTransform[1].x * (texY) + _UnityDisplayTransform[2].x);
+ 			 	o.texcoord.y = (_UnityDisplayTransform[0].y * texX + _UnityDisplayTransform[1].y * (texY) + (_UnityDisplayTransform[2].y));
 	            
 	      o.uv = vertex.position.xy; //texX;
 	      //o.uv.y = texY;
@@ -79,7 +80,7 @@
 				float4 t = tex2D(_MainTex, length(c.xyz) * 10 );
 
 				//if( length( t.xyz ) < 1.14 ){ c.xyz = t.xyz; }
-        return t*c;
+        return length(t)*c;
 			}
 			ENDCG
 		}

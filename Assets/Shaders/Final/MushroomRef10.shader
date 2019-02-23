@@ -150,7 +150,7 @@
 
 				n = sin(n * _NoiseBandVal);
 
-				float3 col = hsv(  v.debug.x * .1+ 1 * _IdHueDif +  (1-shadow) * _ShadowHue  + _HueOffset  + length(v.worldPos - _LightPos) * _LightHueSize + ( v.uv.y) * _HueSize + n * _NoiseAmount  + _HueStart + _HueOffset * v.debug.x * .2+  sin(_HueSpeed * _Time.y ) * _HueOsscilation , _Saturation,_Lightness );// / length(v.worldPos - _LightPos); //float3( m , ;//hsv( m  + v.debug.x*_HueSize + _HueStart,_Saturation,1)* shadow;
+				float3 col = hsv(  v.debug.x * .1+ 1 * _IdHueDif +  (1-shadow) * _ShadowHue  + _HueOffset  + length(v.worldPos - _LightPos) * _LightHueSize + ( v.uv.y) * _HueSize + n * _NoiseAmount  + _HueStart + _HueOffset * v.debug.x * .2+  sin(_HueSpeed * _Time.y ) * _HueOsscilation , _Saturation  * .6,_Lightness );// / length(v.worldPos - _LightPos); //float3( m , ;//hsv( m  + v.debug.x*_HueSize + _HueStart,_Saturation,1)* shadow;
 		
         return saturate(float4( col , 1.));
 			}

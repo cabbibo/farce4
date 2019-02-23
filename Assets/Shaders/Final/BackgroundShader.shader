@@ -1,7 +1,8 @@
-﻿Shader "Unlit/LightendBackground"{
+﻿Shader "Final/BackgroundShader"{
     Properties
     {   
         _Color ("_Color",Color) = (1,1,1,1)
+        _Hue ("_Hue",float) = 1
         _textureY ("TextureY", 2D) = "white" {}
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
     }
@@ -52,6 +53,8 @@
             sampler2D _textureY;
             sampler2D _textureCbCr;
             float4 _Color;
+            float _Hue;
+            #include "../Chunks/hsv.cginc"
 
             fixed4 frag (TexCoordInOut i) : SV_Target
             {
@@ -69,7 +72,9 @@
 
                 float4 col = mul(ycbcrToRGBTransform, ycbcr);
 
-                col += .3;
+                float hue = _Hue + _Time.y * .6 + length(col) * .2;
+                float4 newCol = float4(hsv( hue ,.8,1) , 1);
+                col *= newCol;
 
                 return col;
             }

@@ -21,7 +21,7 @@
 			#include "UnityCG.cginc"
 			#include "../Chunks/hsv.cginc"
 
-			float4x4 _DisplayTransform;
+			float4x4 _UnityDisplayTransform;
 
 
 
@@ -45,8 +45,8 @@
 				float texX = vertex.texcoord.x;
 				float texY = vertex.texcoord.y;
 				
-				o.texcoord.x = (_DisplayTransform[0].x * texX + _DisplayTransform[1].x * (texY) + _DisplayTransform[2].x);
- 			 	o.texcoord.y = (_DisplayTransform[0].y * texX + _DisplayTransform[1].y * (texY) + (_DisplayTransform[2].y));
+				o.texcoord.x = (_UnityDisplayTransform[0].x * texX + _UnityDisplayTransform[1].x * (texY) + _UnityDisplayTransform[2].x);
+ 			 	o.texcoord.y = (_UnityDisplayTransform[0].y * texX + _UnityDisplayTransform[1].y * (texY) + (_UnityDisplayTransform[2].y));
 	            
 				return o;
 			}
@@ -70,7 +70,7 @@
 					);
 
 				float4 c = mul(ycbcrToRGBTransform, ycbcr);
-				c.xyz = hsv( sin( length( c.xyz ) * 20 ) + _Time.y * .3 , .5 ,(sin(length(c.xyz * 40 + _Time.y* .2))+1)/2);//* c.xyz;
+				c.xyz = hsv( sin( length( c.xyz ) * 10 ) + _Time.y * .5 , .5 ,(sin(length(c.xyz * 13 + _Time.y* .7))+3)/2);//* c.xyz;
                 return c;
 			}
 			ENDCG

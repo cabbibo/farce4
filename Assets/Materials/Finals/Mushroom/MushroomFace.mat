@@ -5,9 +5,10 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: MushroomFace
-  m_Shader: {fileID: 4800000, guid: acb1c9c15779e434b903b20e4a4e1b5e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 780cd61cabe7841aba3376bd83b1856b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -78,6 +79,7 @@ Material:
     - _NoiseSize: 4
     - _NormalSize: 0.4
     - _OcclusionStrength: 1
+    - _Offset: 0.01
     - _OutlineExtrusion: 0.003
     - _Parallax: 0.02
     - _RampStart: 0.0003
@@ -85,6 +87,7 @@ Material:
     - _ShadowDarkness: 0.4
     - _ShadowSize: 0.1
     - _ShinyBlend: 2
+    - _Size: 0.01
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
