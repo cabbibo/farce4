@@ -6,6 +6,7 @@ public class PlaceParticlesOnMesh : LifeForm {
 
 
   public bool drawable;
+  public bool dragDraw;
 
 
   public PlacedDynamicMeshParticles particles;
@@ -89,6 +90,15 @@ public class PlaceParticlesOnMesh : LifeForm {
         }else{
           intersect.active = false;
         }
+
+        if( dragDraw ){
+          if( touch.Down == 1 ){
+          intersect.active = true;
+          }else if( touch.Down == 0){
+            intersect.active = false;
+          }
+        }
+
       }else{
         intersect.active = false;
         intersect.readBack = false;

@@ -42,7 +42,7 @@ struct Particle{
   float3 debug;
 };
 
-
+/*
   struct Vert{
 
     float3 pos;
@@ -51,6 +51,18 @@ struct Particle{
     float2 uv;
     float debug;
   };
+*/
+
+
+    struct Vert{
+  float3 pos;
+  float3 oPos;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float2 debug;
+};
+
 
 float4x4 _Transform;
 
