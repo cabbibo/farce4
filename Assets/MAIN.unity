@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4512307, g: 0.5009517, b: 0.57356423, a: 1}
+  m_IndirectSpecularColor: {r: 0.45123065, g: 0.5009514, b: 0.57356256, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d8dead6592a40bb87431438ce21e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeTilSelect: 0.4
+  timeTilSelect: 4
   velCutoff: 10
   OnTrigger:
     m_PersistentCalls:
@@ -2555,7 +2555,8 @@ MonoBehaviour:
   active: 1
   Cycles: []
   lenses:
-  - {fileID: 160832230}
+  - {fileID: 821013510}
+  - {fileID: 1251153724}
   faceMesh: {fileID: 257846570}
   recording: {fileID: 1482713933}
   haptics: {fileID: 287228526}
@@ -4436,6 +4437,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3779f625a2795476fbb5b208fec5a8e8, type: 3}
+--- !u!114 &821013510 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114293226704609340, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+    type: 3}
+  m_PrefabInstance: {fileID: 1147999125}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc1a151149748947abc65998a4d3bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &823376852 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114098333066890728, guid: 349c59469d3624b9eae266226797cc66,
@@ -5980,6 +5993,50 @@ PrefabInstance:
       propertyPath: _MeshSizeMultiplier
       value: 0.06
       objectReference: {fileID: 0}
+    - target: {fileID: 114345392541334014, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: length
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: normalForce
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: dampening
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.data[1]
+      value: 
+      objectReference: {fileID: 1147999127}
+    - target: {fileID: 4693689159669968, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: touch
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: skin
+      value: 
+      objectReference: {fileID: 257846574}
+    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: fileName
+      value: mushF3
+      objectReference: {fileID: 0}
     - target: {fileID: 114293226704609340, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -6030,50 +6087,6 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 2800000, guid: 6a9aa4a25194842499acaad524cf657f, type: 3}
-    - target: {fileID: 114345392541334014, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: length
-      value: 0.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: normalForce
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: dampening
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.data[1]
-      value: 
-      objectReference: {fileID: 1147999127}
-    - target: {fileID: 4693689159669968, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: touch
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: skin
-      value: 
-      objectReference: {fileID: 257846574}
-    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: fileName
-      value: mushF3
-      objectReference: {fileID: 0}
     - target: {fileID: 4760572271466776, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6194,6 +6207,18 @@ MonoBehaviour:
   - {fileID: 1554289453}
   - {fileID: 182330508}
   - {fileID: 106905582}
+--- !u!114 &1251153724 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114509188942390470, guid: 349c59469d3624b9eae266226797cc66,
+    type: 3}
+  m_PrefabInstance: {fileID: 918629060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc1a151149748947abc65998a4d3bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1294484809
 GameObject:
   m_ObjectHideFlags: 0
@@ -6347,6 +6372,26 @@ PrefabInstance:
       propertyPath: Cycles.Array.data[1]
       value: 
       objectReference: {fileID: 331205595}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.data[1]
+      value: 
+      objectReference: {fileID: 825850066}
+    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: touch
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: skin
+      value: 
+      objectReference: {fileID: 257846574}
     - target: {fileID: 114293226704609340, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -6377,26 +6422,6 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 2800000, guid: 3e39f64e1f5134f9ebe81c5c2bd3889d, type: 3}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.data[1]
-      value: 
-      objectReference: {fileID: 825850066}
-    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: touch
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114701638404789940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: skin
-      value: 
-      objectReference: {fileID: 257846574}
     - target: {fileID: 4760572271466776, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6974,7 +6999,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1482713933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6982,7 +7007,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482713932}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87962af478923440996e2054589e3008, type: 3}
   m_Name: 
@@ -10793,7 +10818,7 @@ MonoBehaviour:
   particles: {fileID: 114272059046386558}
   place: {fileID: 114948963258340626}
   intersect: {fileID: 114903391396522156}
-  fileName: KelpBeard
+  fileName: Mushroom
   cameraUp: {x: 0, y: 0, z: 0}
   cameraLeft: {x: 0, y: 0, z: 0}
   radius: 0.01

@@ -47,9 +47,13 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
 
 
+    _Radius = .01;
+
+
+
     float3 startPos = s1.pos;
     float3 leafDir = s2.pos - s1.pos;//-normalize(cross(s.tangent,s.nor));
-    float3 leafTan = normalize(cross( normalize( leafDir) ,float3(0,1,0)));
+    float3 leafTan = float3(1,0,0);//normalize(cross( normalize(leafDir) * 1000 , 10000*float3(0,1,0)));
   
 
     if( which == 0 ){

@@ -117,8 +117,9 @@ public class Recorder : MonoBehaviour
     }
 
 
-    public void StartRecording () {
+    public void StartRecording() {
 
+        
         StartRecordEvent.Invoke();
         // Start the microphone
         var microphoneFormat = Format.Default;

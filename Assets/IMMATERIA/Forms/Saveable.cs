@@ -27,7 +27,7 @@ public class Saveable {
   public static void Load(Form form , string name){
     if( File.Exists(Application.streamingAssetsPath  + "/"+name+".dna")){
       
-//      Debug.Log("loading from lodabale");
+      Debug.Log("loading from lodabale");
       BinaryFormatter bf = new BinaryFormatter();
       //FileStream stream = new FileStream(Application.streamingAssetsPath  + "/"+name+".dna",FileMode.Open);
 
@@ -36,7 +36,7 @@ public class Saveable {
         int[] data = bf.Deserialize(stream) as int[];
         form.SetDNA(data);
       }else{
-        //Debug.Log("we've loaged it");
+        Debug.Log("we've loaged it");
         float[] data = bf.Deserialize(stream) as float[];
         form.SetDNA(data);
       }

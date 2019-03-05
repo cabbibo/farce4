@@ -24,6 +24,7 @@ public class MakeFaceMesh : Cycle {
   //private UnityARSessionNativeInterface m_session;
 
 
+  public Body body;
   public FaceController faceController;
 
   public override void Create(){
@@ -38,6 +39,12 @@ public class MakeFaceMesh : Cycle {
 
 
     ((MutatingVerts)verts).mesh = mesh;
+
+  }
+
+  public override void OnBirthed(){
+    print("hi");
+    body.render.castShadows = false;
 
   }
 
