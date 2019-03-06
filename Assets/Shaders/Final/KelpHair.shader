@@ -128,7 +128,7 @@
 
 float3 col;
                 col =  tCol * hsv(v.uv.x * .3 + .6 ,1,1);//3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
-       
+                col *= (sin( v.uv.x * 40) + 1) / 2;
                 //col = tCol;// normalize(n) * .5 + .5;//lerp(tex2D(_ColorMap , float2(pow( m,4) * .4 + _Swap * .3,0)) * pow(m,4) , tCol,1-m) ;// + tCol * (1-pow( m,20));// * _Color;// hsv( v.uv.x * .4 + v.debug.x * .4 + v.debug.y * 10 , .7,1);
 
                 //col *= shadow*.5 + .2;

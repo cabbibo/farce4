@@ -6,19 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SimpleAR.unity
+    path: Assets/Shaders/Scenes/SimpleAR.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
-    path: Assets/Scenes/Plane Detection/FeatheredPlanes.unity
+    path: Assets/Shaders/Scenes/Plane Detection/FeatheredPlanes.unity
     guid: 8252358a1e2ba7549a94df43aacec984
   - enabled: 0
-    path: Assets/Scenes/FaceTracking/Face.unity
+    path: Assets/Shaders/Scenes/FaceTracking/Face.unity
     guid: d8b65509a10894e1dbb93c799ececfd9
   - enabled: 0
-    path: Assets/Scenes/FaceTracking/FaceBlendShapes.unity
+    path: Assets/Shaders/Scenes/FaceTracking/FaceBlendShapes.unity
     guid: e9280441e79e84bdbbf6b724880ae2d9
   - enabled: 0
-    path: Assets/Scenes/FaceTracking/FaceMesh.unity
+    path: Assets/Shaders/Scenes/FaceTracking/FaceMesh.unity
     guid: 047514b96a5d44d6bb0acbfa06ace943
   - enabled: 1
     path: Assets/MAIN.unity

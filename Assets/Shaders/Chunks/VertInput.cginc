@@ -20,6 +20,7 @@
         float3 world : TEXCOORD3;
         float3 tan : TEXCOORD4;
         float2 debug : TEXCOORD5;
+        float3 eye : TEXCOORD6;
         UNITY_SHADOW_COORDS(2)
         //LIGHTING_COORDS(1,2) // shadows
       };
@@ -40,6 +41,7 @@
         output.world = v.pos;//mul(unity_ObjectToWorld, input.vertex).xyz;
         output.uv = v.uv;//input.texCoord;
         output.debug = v.debug;
+        output.eye = v.pos-_WorldSpaceCameraPos;
 
         UNITY_TRANSFER_SHADOW(output,output.world);
 

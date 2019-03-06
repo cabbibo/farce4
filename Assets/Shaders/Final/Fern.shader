@@ -111,7 +111,7 @@
 				
 				float4 nTex = tex2D(_NormalMap,1*v.uv) * 2 - 1;
 	float3 n =  v.nor * nTex.y  + v.tan * nTex.x * 10+ v.bi * nTex.y*10;////normalize( normalize(float3( noise(v.worldPos*_NoiseSize) , noise(v.worldPos*_NoiseSize+10000) , noise(v.worldPos*_NoiseSize +100) -.5)) - 6*v.nor);
-         	n = normalize(n);
+         	n = v.nor;//normalize(n);
 
          	float3 refl = reflect( normalize( v.eye) , n);
 
@@ -127,7 +127,7 @@
 				float3 tCol =texCUBE(_CubeMap , refl );
 
 float3 col;
-				col = 3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
+				col = 2 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
        
 				//col = tCol;// normalize(n) * .5 + .5;//lerp(tex2D(_ColorMap , float2(pow( m,4) * .4 + _Swap * .3,0)) * pow(m,4) , tCol,1-m) ;// + tCol * (1-pow( m,20));// * _Color;// hsv( v.uv.x * .4 + v.debug.x * .4 + v.debug.y * 10 , .7,1);
 

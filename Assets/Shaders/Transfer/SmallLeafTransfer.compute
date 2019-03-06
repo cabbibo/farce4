@@ -47,8 +47,6 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
 
 
-    _Radius = .01;
-
 
 
     float3 startPos = s1.pos;
@@ -80,13 +78,13 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
 
 
-
+    fDebug = float2( float(transferID) , 0 );
 
     pID = safeID(pID,_VertBuffer_COUNT);
 
-    _VertBuffer[pID].pos = fPos;
-    _VertBuffer[pID].uv = fUV;
-    _VertBuffer[pID].nor = fNor;
-    _VertBuffer[pID].debug = fDebug;
+    _VertBuffer[pID].pos    = fPos;
+    _VertBuffer[pID].uv     = fUV;
+    _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].debug  = fDebug;
 
 }

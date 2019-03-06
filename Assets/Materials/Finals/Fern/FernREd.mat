@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: FernREd
   m_Shader: {fileID: 4800000, guid: bf32b21bdc233634d8b99eeb95023450, type: 3}
   m_ShaderKeywords: 
@@ -27,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap:
-        m_Texture: {fileID: 8900000, guid: 90196f2c2d8d2f2448717676e1a09894, type: 3}
+        m_Texture: {fileID: 8900000, guid: dde16fbb6f7e14e8f993dd5cf03a1740, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:

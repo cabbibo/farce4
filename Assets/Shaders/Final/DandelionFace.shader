@@ -62,11 +62,11 @@
 
                 float attenuation = UNITY_SHADOW_ATTENUATION(v,v.world + n * v.normal * .003   );
                 float attenuation2 = UNITY_SHADOW_ATTENUATION(v,v.world + n * v.normal * .015   );
-                //m = min( m , attenuation) + n * .2;
+                m = min( m , attenuation) + n * .2;
                 float m2 = floor(m * 6) / 6;
-                //m = 1.5-1000*pow(abs( m - m2 ),4);
+                m = 1.5-1000*pow(abs( m - m2 ),4);
 
-                col = m2;//attenuation * .5 + .5;//clamp( 1-abs(attenuation2- attenuation) * .6 , 0, 1);//hsv(m * (.5 * m2 + .5),1,1);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
+                col = m * (attenuation * .5 + .5);//clamp( 1-abs(attenuation2- attenuation) * .6 , 0, 1);//hsv(m * (.5 * m2 + .5),1,1);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
 
 
                 //if( n < .36 ){ discard; }
