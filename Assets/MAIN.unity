@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4512307, g: 0.5009517, b: 0.57356423, a: 1}
+  m_IndirectSpecularColor: {r: 0.45123065, g: 0.5009514, b: 0.57356256, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -839,7 +839,7 @@ GameObject:
   - component: {fileID: 180778287}
   m_Layer: 5
   m_Name: buttonTest
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1768,6 +1768,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114629009905265832, guid: 14ff415564fdd49019f1588d0874b05b,
+        type: 3}
+      propertyPath: BackgroundMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 5d42cf00dbc7b48eaab4bbcac6cea106, type: 2}
+    - target: {fileID: 114629009905265832, guid: 14ff415564fdd49019f1588d0874b05b,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 546c70cccc0f24e14b76d3ada586b837, type: 3}
     - target: {fileID: 114818469173959550, guid: 14ff415564fdd49019f1588d0874b05b,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -2035,16 +2045,6 @@ PrefabInstance:
       propertyPath: dying
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114629009905265832, guid: 14ff415564fdd49019f1588d0874b05b,
-        type: 3}
-      propertyPath: BackgroundMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 5d42cf00dbc7b48eaab4bbcac6cea106, type: 2}
-    - target: {fileID: 114629009905265832, guid: 14ff415564fdd49019f1588d0874b05b,
-        type: 3}
-      propertyPath: icon
-      value: 
-      objectReference: {fileID: 2800000, guid: 546c70cccc0f24e14b76d3ada586b837, type: 3}
     - target: {fileID: 1858267152186752, guid: 14ff415564fdd49019f1588d0874b05b, type: 3}
       propertyPath: m_Name
       value: hally
@@ -2580,7 +2580,7 @@ MonoBehaviour:
   active: 1
   Cycles: []
   lenses:
-  - {fileID: 160832230}
+  - {fileID: 362289884860107360}
   - {fileID: 202550977}
   - {fileID: 552761983}
   - {fileID: 1251153724}
@@ -2589,6 +2589,8 @@ MonoBehaviour:
   - {fileID: 821013510}
   - {fileID: 114227991321486844}
   - {fileID: 1866089784}
+  - {fileID: 160832230}
+  - {fileID: 1685525617}
   faceMesh: {fileID: 257846570}
   recording: {fileID: 1482713933}
   haptics: {fileID: 287228526}
@@ -2669,7 +2671,7 @@ GameObject:
   - component: {fileID: 509023270}
   m_Layer: 5
   m_Name: ya
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2813,6 +2815,19 @@ MonoBehaviour:
   bg: {fileID: 554214311}
   mat1: {fileID: 2100000, guid: a5a3a8f0946b24b04ac3e24e113221e3, type: 2}
   mat2: {fileID: 2100000, guid: 2fcadc4d141624ca58d14d856ab23dc8, type: 2}
+--- !u!114 &554214313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554214309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2335f91f59f4803906d6ea94040f76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  down: 1
 --- !u!4 &554214314 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6872318215491801759, guid: 3779f625a2795476fbb5b208fec5a8e8,
@@ -3015,6 +3030,22 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: Vector2FloatEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  OnDebugTouch:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 554214313}
+        m_MethodName: Toggle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   RayOrigin: {x: 0, y: 0, z: 0}
   RayDirection: {x: 0, y: 0, z: 0}
   Down: 0
@@ -3043,7 +3074,7 @@ GameObject:
   - component: {fileID: 582479841}
   m_Layer: 0
   m_Name: Yum ->
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3247,7 +3278,7 @@ GameObject:
   - component: {fileID: 608629017}
   m_Layer: 5
   m_Name: buttonTest (1)
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3361,7 +3392,7 @@ GameObject:
   - component: {fileID: 627623132}
   m_Layer: 5
   m_Name: ya (1)
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4161,6 +4192,26 @@ PrefabInstance:
       propertyPath: destroyed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
+        type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
+        type: 3}
+      propertyPath: BackgroundMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 3911c016e7de74db2ae384c32004feac, type: 2}
+    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 2800000, guid: 443e860c4a2f344879cd0a8b2c8a3d8f, type: 3}
+    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
+        type: 3}
+      propertyPath: active
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114122155749858348, guid: 42862eb9a676f44e0af20bf43796a8b1,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -4238,26 +4289,6 @@ PrefabInstance:
       propertyPath: Cycles.Array.data[0]
       value: 
       objectReference: {fileID: 1047525782}
-    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
-        type: 3}
-      propertyPath: debug
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
-        type: 3}
-      propertyPath: BackgroundMaterial
-      value: 
-      objectReference: {fileID: 2100000, guid: 3911c016e7de74db2ae384c32004feac, type: 2}
-    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
-        type: 3}
-      propertyPath: icon
-      value: 
-      objectReference: {fileID: 2800000, guid: 443e860c4a2f344879cd0a8b2c8a3d8f, type: 3}
-    - target: {fileID: 114227991971642742, guid: 42862eb9a676f44e0af20bf43796a8b1,
-        type: 3}
-      propertyPath: active
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114272060230452212, guid: 42862eb9a676f44e0af20bf43796a8b1,
         type: 3}
       propertyPath: destroyed
@@ -4293,7 +4324,7 @@ GameObject:
   - component: {fileID: 803536522}
   m_Layer: 5
   m_Name: buttonTest (1)
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5213,7 +5244,7 @@ GameObject:
   - component: {fileID: 957853314}
   m_Layer: 5
   m_Name: SLidz
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5272,7 +5303,7 @@ GameObject:
   - component: {fileID: 999250219}
   m_Layer: 5
   m_Name: Slider
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5657,11 +5688,11 @@ GameObject:
   - component: {fileID: 1084312764}
   m_Layer: 5
   m_Name: New Text
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1084312763
 Transform:
   m_ObjectHideFlags: 0
@@ -6049,31 +6080,6 @@ PrefabInstance:
       propertyPath: _MeshSizeMultiplier
       value: 0.06
       objectReference: {fileID: 0}
-    - target: {fileID: 114345392541334014, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: length
-      value: 0.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: normalForce
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: dampening
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.data[1]
-      value: 
-      objectReference: {fileID: 1147999127}
     - target: {fileID: 114293226704609340, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -6124,6 +6130,31 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 2800000, guid: 6a9aa4a25194842499acaad524cf657f, type: 3}
+    - target: {fileID: 114345392541334014, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: length
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: normalForce
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114361422957672940, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: dampening
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.data[1]
+      value: 
+      objectReference: {fileID: 1147999127}
     - target: {fileID: 4693689159669968, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -6432,16 +6463,6 @@ PrefabInstance:
       propertyPath: Cycles.Array.data[1]
       value: 
       objectReference: {fileID: 331205595}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
-        type: 3}
-      propertyPath: Cycles.Array.data[1]
-      value: 
-      objectReference: {fileID: 825850066}
     - target: {fileID: 114293226704609340, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
         type: 3}
       propertyPath: Cycles.Array.size
@@ -6477,6 +6498,16 @@ PrefabInstance:
       propertyPath: FaceMaterial
       value: 
       objectReference: {fileID: 2100000, guid: bffe579d4da85404885c46e454c13e8d, type: 2}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114719013953610694, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
+        type: 3}
+      propertyPath: Cycles.Array.data[1]
+      value: 
+      objectReference: {fileID: 825850066}
     - target: {fileID: 114372218575904538, guid: 22f6ccc1f7c3144c4a9e994b49fbcc31,
         type: 3}
       propertyPath: count
@@ -7553,7 +7584,7 @@ GameObject:
   - component: {fileID: 1550563215}
   m_Layer: 0
   m_Name: Yuk
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8402,7 +8433,7 @@ GameObject:
   - component: {fileID: 1647359734}
   m_Layer: 5
   m_Name: WhileRecording
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8570,7 +8601,7 @@ GameObject:
   - component: {fileID: 1695389270}
   m_Layer: 5
   m_Name: na
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8676,7 +8707,7 @@ GameObject:
   - component: {fileID: 1726198681}
   m_Layer: 0
   m_Name: Hold To Record
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8796,7 +8827,7 @@ GameObject:
   - component: {fileID: 1769230359}
   m_Layer: 5
   m_Name: buttonTest (2)
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8885,7 +8916,7 @@ GameObject:
   - component: {fileID: 1769232797}
   m_Layer: 0
   m_Name: Upper
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9260,7 +9291,7 @@ GameObject:
   - component: {fileID: 1945984944}
   m_Layer: 0
   m_Name: swipe
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

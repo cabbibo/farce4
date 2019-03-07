@@ -31,6 +31,8 @@ public class TouchToRay : MonoBehaviour {
   public UnityEvent OnDown;
   public UnityEvent OnUp;
   public Vector2FloatEvent WhileDown;
+
+  public UnityEvent OnDebugTouch;
   
 
   public Vector3 RayOrigin;
@@ -66,14 +68,26 @@ public class TouchToRay : MonoBehaviour {
       if (Input.GetMouseButton (0)) {
         Down = 1;
         p  =  Input.mousePosition;///Input.GetTouch(0).position;
+
+
       }else{
         Down = 0;
         oP = p;
+      }
+
+      if( Input.GetMouseButtonDown(0) &&   Input.GetKey("space") ){
+        OnDebugTouch.Invoke();
       }
     #else
       if (Input.touchCount > 0 ){
         Down = 1;
         p  =  Input.GetTouch(0).position;
+
+        if( Input.touchCount > 2 ){
+          if( Input.GetTouch(0).phase == TouchPhase.Began || Input.GetTouch(1).phase == TouchPhase.Began || Input.GetTouch(2).phase == TouchPhase.Began ){
+            OnDebugTouch.Invoke();
+          }
+        }
       }else{
         Down = 0;
         oP = p;
