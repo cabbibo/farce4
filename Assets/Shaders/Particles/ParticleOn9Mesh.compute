@@ -127,7 +127,7 @@ void GooPoint(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
   vert.debug = fPos.x;
 
-  float3 force = vert.pos - (fPos + normalize(fNor) * .004);
+  float3 force = vert.pos - (fPos - normalize(fNor) * .4);
 
   vert.vel += -force * .4;
   vert.pos += vert.vel;

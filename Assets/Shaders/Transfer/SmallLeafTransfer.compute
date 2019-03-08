@@ -57,28 +57,28 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     if( which == 0 ){
       fPos = s1.pos;
       fNor = leafDir;
-      fDebug = float2(1,0);
+    fDebug = float2( float(transferID) , 0 );
       fUV = float2(0,0);
     }else if( which == 1 ){
       fPos = s1.pos + leafDir * .3 -  leafTan * _Radius * .3;
       fNor = leafDir;
-      fDebug = float2(1,0);
+    fDebug = float2( float(transferID) , .3 );
       fUV = float2(1,0);
     }else if( which == 2){
       fPos = s1.pos + leafDir * .3  + leafTan * _Radius * .3;
       fNor = leafDir;
-      fDebug = float2(1,0);
+    fDebug = float2( float(transferID) , .3 );
       fUV = float2(0,1);
     }else{
       fPos = s2.pos;
       fNor = leafDir;
-      fDebug = float2(1,0);
+    fDebug = float2( float(transferID) , 1 );
       fUV = float2(1,1);
+
     };
 
 
 
-    fDebug = float2( float(transferID) , 0 );
 
     pID = safeID(pID,_VertBuffer_COUNT);
 
@@ -88,3 +88,4 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     _VertBuffer[pID].debug  = fDebug;
 
 }
+

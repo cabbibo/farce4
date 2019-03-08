@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -133,7 +133,7 @@ public class Recorder : MonoBehaviour
         var audioFormat = new AudioFormat(microphoneFormat.sampleRate, microphoneFormat.channelCount);
         
         float aspect = Camera.main.aspect;
-        var videoFormat = new VideoFormat(720, (int)(720 / aspect));
+        var videoFormat = new VideoFormat(1080, (int)(1080 / aspect));
         NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnRecordingFinish);
         
         // Create a camera recorder for the main cam

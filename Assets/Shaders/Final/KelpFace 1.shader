@@ -1,4 +1,4 @@
-﻿Shader "Final/GridFace2"
+﻿Shader "Final/KelpFace2"
 {
     Properties
     {
@@ -6,7 +6,6 @@
         _Offset("_Offset", float) = 0.01
         _Size("_Size", float) = 0.01
     
-        _CubeMap( "Cube Map" , Cube )  = "defaulttexture" {}
        _ColorMap ("ColorMap", 2D) = "white" {}
     }
 
@@ -43,7 +42,6 @@
             #include "../Chunks/safeID.cginc"
 
 
-            samplerCUBE _CubeMap;
             sampler2D _ColorMap;
             float _Offset;
             float _Size;
@@ -58,30 +56,23 @@
                 float3 col;
 
                 float size = 1000;
-                float n = noise(v.world * 120);//sin(v.world.x * size)  + sin(v.world.y*size) + sin(v.world.z * size) ;
+                float n = noise(v.world * 120 + float3(0,_Time.y,0));//sin(v.world.x * size)  + sin(v.world.y*size) + sin(v.world.z * size) ;
                 //float attenuation = LIGHT_ATTENUATION(v);
 
 
                 float attenuation = UNITY_SHADOW_ATTENUATION(v,v.world  + v.normal * .004 );
-                //float attenuation2 = UNITY_SHADOW_ATTENUATION(v,v.world + n * v.normal * .1 );
-                //m = min( m , attenuation) + n * .2;
-                //float m2 = floor(m * 10) / 10;
-                //m = 1.5-1000*pow(abs( m - m2 ),4);
+                float attenuation2 = UNITY_SHADOW_ATTENUATION(v,v.world + n * v.normal * .1 );
+                m = min( m , attenuation) + n * .2;
 
-     float3 refl = reflect( normalize( v.eye) , v.normal);
-                      //col = hsv((abs(attenuation2 - attenuation)*.1)+m2 * .8,.2,(abs(attenuation2 - attenuation)*.1)+m2 + .8);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
-    float3 tCol =texCUBE(_CubeMap , refl );
-
+               // float m2 = floor(m * 6) / 6;
+                float m2 = floor((m) * 4) / 4;
+                if( m2 - m < -.13){discard;}
+                m = abs(m2+m);
 
 
-                 col =  tCol * hsv(v.uv.x * .3 + .6 ,1,1);//3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
-       
-                col = 1;
-                float n2 = noise( float3(v.uv , _Time.x * .1) * 40 ) * .3;
-                float bandVal = clamp( 1 -  (sin(v.uv.y * 100+ _Time.y)+ .7+ n2 ) * 1,0,1);
-                
-                col = lerp( col ,tCol * hsv(v.uv.x * .3 + .6 ,1,1),bandVal * 1);
-                col *= attenuation * .5 + .5;
+                col = hsv(m * .1,.5,1);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
+
+
                 //if( n < .36 ){ discard; }
                 return saturate(float4(col, 1.0));
             }

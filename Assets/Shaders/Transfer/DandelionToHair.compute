@@ -1,4 +1,5 @@
 ﻿#pragma kernel Force
+#pragma kernel FlatForce
 #pragma kernel Constraint
 
 #include "../Chunks/noise.cginc"
@@ -69,6 +70,74 @@ void Force (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 i
 
     pID = safeID( pID , _VertBuffer_COUNT );
     bID = safeID( bID , _SkeletonBuffer_COUNT );
+
+    Vert vert = _VertBuffer[pID];
+    Vert base = _SkeletonBuffer[bID];
+    Vert base1 = _SkeletonBuffer[bID-1];
+    //Vert base2 = _SkeletonBuffer[bID-2];
+
+    float3 nor = normalize(base.pos - base1.pos);
+    float3 tang = normalize(cross( nor , float3(0,0,1) ));//base1.pos - base2.pos;
+    float3 bi = normalize(cross( tang , nor ));
+
+
+    float angle = ( float( pID % ( _VertsPerVert ) ) ) / float(_VertsPerVert);
+    angle *= 6.28;
+
+    float x = sin( angle );
+    float y = -cos( angle );
+
+    float3 dir = tang * x + bi * y;//normalize(float3(x,y,z));
+
+    //float3 targetPos = base.pos + .01 * ( x *  cos( v  ) + y * -sin(v));
+
+    float3 force = 1.1 * normalize(dir);//( x *  sin( v  ) + y * -cos(v)); //-(vert.pos - targetPos) * 30;
+
+
+
+    // Inertia: objects in motion stay in motion.
+    float3 vel = getVel( vert.pos , vert.oPos);
+
+    if( length( force ) > 10 ){
+      force = normalize(force) * 10;
+    }
+ 
+
+    bool tb = false;
+
+  
+    if( _Delta  < .1 && tb == false ){
+
+      float dampening = .9;// - vert.life * .01;
+      float3 next = vert.pos + vel * dampening + force * _Delta * _Delta;
+
+      vert.oPos = vert.pos;
+      vert.pos = next;
+      vert.uv = float2( base.uv.x , float(pID) );
+
+    }
+
+    _VertBuffer[pID] = vert;
+
+
+  }
+  
+}
+
+
+[numthreads(NR_THREADS,1,1)]
+void FlatForce (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 id : SV_DispatchThreadID) {
+
+  //int pID = id.x + id.y * gridX + id.z * gridX * gridY;
+
+  uint pID = threadID + u3GroupID.x * NR_THREADS;
+  uint bID = pID / _VertsPerVert;
+  bID = (bID+1) * _NumVertsPerHair - 1;
+
+  if( pID < _VertBuffer_COUNT && bID < _SkeletonBuffer_COUNT ){
+
+    pID = safeID( pID , _VertBuffer_COUNT );
+    bID = safeID( bID , _SkeletonBuffer_COUNT );
     Vert vert = _VertBuffer[pID];
     Vert base = _SkeletonBuffer[bID];
 
@@ -114,8 +183,6 @@ void Force (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID, uint3 i
   }
   
 }
-
-
 
 
 
