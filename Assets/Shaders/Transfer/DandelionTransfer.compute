@@ -1,6 +1,7 @@
 ﻿
 #pragma kernel Transfer
 #pragma kernel FlowerTransfer
+#pragma kernel FlowerTransferSquare
 #pragma kernel CenterTransfer
 
 struct Vert{
@@ -142,25 +143,94 @@ void FlowerTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
       fPos = s1.pos;
       fNor = leafDir;
       fDebug = float2(1,0);
-      fUV = float2(0,0);
+      fUV = float2(.5,0);
 
-    fDebug = float2( float(transferID) , .3 );
+      fDebug = float2( float(transferID) , .3 );
     }else if( which == 1 ){
       fPos = s1.pos + leafDir * .3 -  leafTan * _Radius * .3;
       fNor = leafDir;
       fDebug = float2(1,0);
-      fUV = float2(1,0);
+      fUV = float2(0,.3);
 
     fDebug = float2( float(transferID) , .3 );
     }else if( which == 2){
       fPos = s1.pos + leafDir * .3  + leafTan * _Radius * .3;
       fNor = leafDir;
       fDebug = float2(1,0);
-      fUV = float2(0,1);
+      fUV = float2(1,.3);
 
     fDebug = float2( float(transferID) , .3 );
     }else{
       fPos = s2.pos;
+      fNor = leafDir;
+      fDebug = float2(1,0);
+      fUV = float2(.5,1);
+      fDebug = float2( float(transferID) , 1 );
+    };
+
+
+
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos    = fPos;
+    _VertBuffer[pID].uv     = fUV;
+    _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].debug  = fDebug;
+
+}
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void FlowerTransferSquare (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 4;
+    int which = pID % 4;
+
+    int hairID = (transferID / _VertsPerVert);
+
+    int sID = ((transferID / _VertsPerVert) + 1) * _NumVertsPerHair -1;
+    
+    Vert s2 = _DandelionBuffer[safeID( transferID , _DandelionBuffer_COUNT )];
+    Vert s1 = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+
+
+
+    float3 startPos = s1.pos;
+    float3 leafDir = s2.pos - s1.pos;//-normalize(cross(s.tangent,s.nor));
+    float3 leafTan = normalize(cross(leafDir, float3(0,0,1)));//float3(1,0,0);//normalize(cross( normalize(leafDir) * 1000 , 10000*float3(0,1,0)));
+  
+
+    if( which == 0 ){
+      fPos = s1.pos -  leafTan * _Radius * .3;
+      fNor = leafDir;
+      fDebug = float2(1,0);
+      fUV = float2(0,0);
+
+      fDebug = float2( float(transferID) , .3 );
+    }else if( which == 1 ){
+      fPos = s1.pos +  leafTan * _Radius * .3;
+      fNor = leafDir;
+      fDebug = float2(1,0);
+      fUV = float2(1,0);
+
+    fDebug = float2( float(transferID) , .3 );
+    }else if( which == 2){
+      fPos = s2.pos - leafTan * _Radius * .3;
+      fNor = leafDir;
+      fDebug = float2(1,0);
+      fUV = float2(0,1);
+
+    fDebug = float2( float(transferID) , .3 );
+    }else{
+      fPos = s2.pos + leafTan * _Radius * .3;
       fNor = leafDir;
       fDebug = float2(1,0);
       fUV = float2(1,1);
@@ -178,6 +248,7 @@ void FlowerTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
     _VertBuffer[pID].debug  = fDebug;
 
 }
+
 
 
 

@@ -134,8 +134,9 @@
 float3 col;
                 col =  tCol * hsv(v.uv.x * .3,1,1);//3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
        
-                float y = tex2D(_TextureY, v.screenPos).r;
-                float4 ycbcr = float4(y, tex2D(_TextureCbCr, v.screenPos).rg, 1.0);
+              float2 uvVal = (v.pos.yx / _ScreenParams.yx);
+                float y = tex2D(_TextureY, uvVal).r;
+                float4 ycbcr = float4(y, tex2D(_TextureCbCr, uvVal).rg, 1.0);
 
                 const float4x4 ycbcrToRGBTransform = float4x4(
                         float4(1.0, +0.0000, +1.4020, -0.7010),
