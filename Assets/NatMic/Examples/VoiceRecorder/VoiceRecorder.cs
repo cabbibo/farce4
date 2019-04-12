@@ -1,51 +1,48 @@
 /* 
 *   NatMic
-*   Copyright (c) 2018 Yusuf Olokoba
+*   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatMicU.Examples {
+namespace NatMic.Examples {
 
     using UnityEngine;
     using UnityEngine.UI;
-    using System.Collections;
-    using Core;
-    using Core.Recorders;
+    using System.IO;
+    using Recorders;
 
     public class VoiceRecorder : MonoBehaviour {
         
         public AudioSource audioSource;
-        private IRecorder recorder;
+        private IAudioDevice audioDevice;
+        private WAVRecorder audioRecorder;
+
+        private void Start () {
+            audioDevice = AudioDevice.Devices[0];
+            Debug.Log("Audio device: "+audioDevice);
+        }
 
         public void ToggleRecording (Text buttonText) { // Invoked by UI
-            if (!NatMic.IsRecording) {
-                var format = Format.Default;
+            if (!audioDevice.IsRecording) {
                 // Create a WAV recorder to record the audio to a file
-                recorder = new WAVRecorder(format, OnAudioFile);
-                recorder.StartRecording();
+                #if UNITY_EDITOR
+                var wavPath = Path.Combine(Directory.GetCurrentDirectory(), "recording.wav");
+                #else
+                var wavPath = Path.Combine(Application.persistentDataPath, "recording.wav");
+                #endif
+                audioRecorder = new WAVRecorder(wavPath);
                 // Start recording
-                var device = Device.Default;
-                NatMic.StartRecording(device, format, OnSampleBuffer);
+                audioDevice.StartRecording(44100, 1, audioRecorder);
                 buttonText.text = @"Stop Recording";
-                Debug.Log("Starting audio input device: "+device);
             } else {
-                // Stop recording the WAV file and dispose the recorder
-                recorder.Dispose();
                 // Stop recording
-                NatMic.StopRecording();
+                audioDevice.StopRecording();
                 buttonText.text = @"Start Recording";
+                // Dispose the recorder
+                audioRecorder.Dispose();
+                Debug.Log("Saved recording to: "+audioRecorder.FilePath);
+                // Play the recording in the scene
+                Application.OpenURL(audioRecorder.FilePath);
             }
-        }
-
-        private void OnSampleBuffer (float[] sampleBuffer, long timestamp) {
-            // Commit the sample buffer to the WAV recorder
-            recorder.CommitSamples(sampleBuffer, timestamp);
-        }
-
-        private void OnAudioFile (string path) {
-            // Log the path
-            Debug.Log("Saved recording to: "+path);
-            // Play the recording in the scene
-            Application.OpenURL(path);
         }
     }
 }

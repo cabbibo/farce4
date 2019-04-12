@@ -3,18 +3,30 @@
 *   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatCorderU.Examples {
+namespace NatCorder.Examples {
 
     using UnityEngine;
     using UnityEngine.UI;
     using System.Collections;
-    using Core;
 
 	[RequireComponent(typeof(RawImage), typeof(AspectRatioFitter))]
     public class CameraPreview : MonoBehaviour {
 
-        public bool useFrontCamera;
         public WebCamTexture cameraTexture { get; private set; }
+        public int width {
+            get {
+                bool isPortrait = cameraTexture.videoRotationAngle == 90 || cameraTexture.videoRotationAngle == 270;
+                return isPortrait ? cameraTexture.height : cameraTexture.width;
+            }
+        }
+        public int height {
+            get {
+                bool isPortrait = cameraTexture.videoRotationAngle == 90 || cameraTexture.videoRotationAngle == 270;
+                return isPortrait ? cameraTexture.width : cameraTexture.height;
+            }
+        }
+
+        [SerializeField] private bool useFrontCamera;
 		private RawImage rawImage;
 		private AspectRatioFitter aspectFitter;
 		

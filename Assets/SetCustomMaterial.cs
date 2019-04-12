@@ -20,7 +20,9 @@ public class SetCustomMaterial : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       bg.customMaterial = controller.lenses[controller.activeFace].BackgroundMaterial;
+
+        
+      // bg.customMaterial = controller.lenses[controller.activeFace].BackgroundMaterial;
     
     }
 }

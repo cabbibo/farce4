@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEditor;
 
-
-using NatCorderU.Core;
+using NatCorder;
+using NatCorder.Clocks;
+using NatCorder.Inputs;
+//using NatMic.Inputs;
+/*using NatCorderU.Core;
 using NatCorderU.Core.Recorders;
 using NatCorderU.Core.Clocks;
 
 
 using NatMicU;
 using NatMicU.Core;
-using NatMicU.Core.Recorders;
+using NatMicU.Core.Recorders;*/
 
 
 using NatShareU;
@@ -47,8 +51,23 @@ public class Recorder : MonoBehaviour
     public Camera UICamera;
    
 
-    private CameraRecorder cameraRecorder;
-    private RealtimeClock recordingClock;
+//    private CameraRecorder cameraRecorder;
+    //private RealtimeClock recordingClock;
+
+
+
+    [Header("Recording")]
+    public int videoWidth = 720;
+
+    [Header("Microphone")]
+    public bool recordMicrophone;
+    public AudioSource microphoneSource;
+
+    private MP4Recorder videoRecorder;
+    private IClock recordingClock;
+    private CameraInput cameraInput;
+    private AudioInput audioInput;
+
 
     public VideoPlayer videoPlayer;
     public AudioSource audioSrc;
@@ -117,46 +136,141 @@ public class Recorder : MonoBehaviour
     }
 
 
-    public void StartRecording() {
+    public void StartRecording () { 
 
-        
-        StartRecordEvent.Invoke();
-        // Start the microphone
-        var microphoneFormat = Format.Default;
-       // device, format, OnSampleBuffer
 
-        var device = Device.Default;
-        NatMic.StartRecording(device,microphoneFormat, OnSampleBuffer);
-       
+        float aspect = Camera.main.aspect;
+     
+
+        Debug.Log( "AUDIO INFO : ");
+        Debug.Log(AudioSettings.outputSampleRate + " : SAMPLE RATE" );
+        Debug.Log((int)AudioSettings.speakerMode + " : speakerMode" );
+
         // Start recording
         recordingClock = new RealtimeClock();
-        var audioFormat = new AudioFormat(microphoneFormat.sampleRate, microphoneFormat.channelCount);
-        
-        float aspect = Camera.main.aspect;
-        var videoFormat = new VideoFormat(1080, (int)(1080 / aspect));
-        NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnRecordingFinish);
-        
-        // Create a camera recorder for the main cam
-        cameraRecorder = CameraRecorder.Create(recordingCamera, recordingClock);
+        videoRecorder = new MP4Recorder(
+            videoWidth,
+            (int)(videoWidth / aspect),
+            30,
+            AudioSettings.outputSampleRate,
+            (int)AudioSettings.speakerMode,
+            OnReplay
+        );
 
-       // recordingIcon.SetActive( true );
+        // Create recording inputs
+        cameraInput = new CameraInput(videoRecorder, recordingClock, Camera.main);
+     
+        StartMicrophone();
+        audioInput = new AudioInput(videoRecorder, recordingClock, microphoneSource, true);
+
+        StartRecordEvent.Invoke();
         iconHolder.SetActive( false );
 
-
-
     }
 
-    public void StopRecording () {
-        // Stop the microphone
-        NatMic.StopRecording();
-        // Stop recording
-        cameraRecorder.Dispose();
-        //recordingCamera.gameObject.SetActive( false ); 
-        //recordingIcon.SetActive( false );
-        NatCorder.StopRecording();
-        EndRecordEvent.Invoke();
-    }
 
+
+        private void StartMicrophone () {
+            #if !UNITY_WEBGL || UNITY_EDITOR // No `Microphone` API on WebGL :(
+            // Create a microphone clip
+                microphoneSource.clip = Microphone.Start(null, true, 60, AudioSettings.outputSampleRate);
+                while (Microphone.GetPosition(null) <= 0) ;
+            // Play through audio source
+                microphoneSource.timeSamples = Microphone.GetPosition(null);
+                microphoneSource.loop = true;
+                microphoneSource.Play();
+            #endif
+        }
+
+        public void StopRecording () {
+
+            // Stop the recording inputs
+            if (recordMicrophone) {
+                StopMicrophone();
+                audioInput.Dispose();
+            }
+
+            cameraInput.Dispose();
+
+            // Stop recording
+            videoRecorder.Dispose();
+
+            EndRecordEvent.Invoke();
+
+        }
+
+        private void StopMicrophone () {
+            #if !UNITY_WEBGL || UNITY_EDITOR
+                Microphone.End(null);
+                microphoneSource.Stop();
+            #endif
+        }
+
+        private void OnReplay (string path) {
+
+            currPath = path;
+            Debug.Log("Saved recording to: "+path);
+
+            ToggleRecordUI(false);
+            // Playback the video
+            #if UNITY_EDITOR
+            
+
+            FullVidPlay(path);////EditorUtility.OpenWithDefaultApp(path);
+            
+            #elif UNITY_IOS
+
+            FullVidPlay(path);
+
+            #elif UNITY_ANDROID
+            
+            Handheld.PlayFullScreenMovie(path);
+            
+            #endif
+        }
+
+
+
+    private void FullVidPlay( string path ){
+
+        print("PLAYIN");
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = path;
+
+        videoPlayer.Prepare();
+
+        //Wait until video is prepared
+       /* while (!videoPlayer.isPrepared)
+        {
+            yield return null;
+        }*/
+
+
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+        //Assign the Audio from Video to AudioSource to be played
+        videoPlayer.EnableAudioTrack(0, true);
+        videoPlayer.SetTargetAudioSource(0, audioSrc);
+
+          //Play Video
+        videoPlayer.Play();
+        videoPlayer.isLooping = true;
+
+        //Play Sound
+        audioSrc.volume = 1;
+        audioSrc.Play();
+        audioSrc.loop = true;
+
+        PlaybackScreenStartEvent.Invoke();
+
+
+        //Debug.Log("Playing Video");
+      /*  while (videoPlayer.isPlaying)
+        {
+            //Debug.LogWarning("Video Time: " + Mathf.FloorToInt((float)videoPlayer.time));
+            yield return null;
+        }*/
+    }
 
     #region --Callbacks--
 
@@ -170,6 +284,7 @@ public class Recorder : MonoBehaviour
         // Scale the panel to match aspect ratios
         //previewAspectFitter.aspectRatio = NatCam.Preview.width / (float)NatCam.Preview.height;
         //recordAspectFitter.aspectRatio = NatCam.Preview.width / (float)NatCam.Preview.height;
+    
     }
 
     // Invoked by NatMic on new microphone events
@@ -177,19 +292,19 @@ public class Recorder : MonoBehaviour
         // Send sample buffers directly to NatCorder for recording
 
        // print( sampleBuffer.Length );
-        if ( NatCorder.IsRecording )
-            NatCorder.CommitSamples( sampleBuffer, recordingClock.CurrentTimestamp );
+     /*   if ( NatCorder.IsRecording )
+            NatCorder.CommitSamples( sampleBuffer, recordingClock.CurrentTimestamp );*/
     }
 
     // Invoked by NatCorder once video recording is complete
-    private void OnRecordingFinish (string path) {
+    /*private void OnRecordingFinish (string path) {
         currPath = path;
         ToggleRecordUI(false);
         StartCoroutine(playVideo(path)); 
-    }
+    }*/
     #endregion
 
-    IEnumerator playVideo(string src)
+    /*IEnumerator playVideo(string src)
     //IEnumerator playVideo()
     {
 
@@ -263,7 +378,8 @@ public class Recorder : MonoBehaviour
         }
 
         //Debug.Log("Done Playing Video");
-    }
+
+    }*/
 
     public void KillShareBtnPress()
     {

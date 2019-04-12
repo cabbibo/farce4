@@ -1,3 +1,31 @@
+## NatCorder 1.5.1
++ Add support for multiple game cameras in `CameraInput`.
++ Fixed memory leak when recording on Windows.
++ Refactored `CameraInput` to use instance constructor instead of static factory method.
++ Refactored `AudioInput` to use instance constructor instead of static factory method.
+
+## NatCorder 1.5.0
++ Completely overhauled front-end API to provide a more recorder-oriented approach. Check out the README.md for more info.
++ Added support for running multiple recording sessions simultaneously on devices that support this.
++ Fixed crash when recording was stopped on some Android devices.
++ Refactored NatCorder namespace from `NatCorderU.Core` to `NatCorder`.
++ Refactored recorder input namespace from `NatCorderU.Core.Recorders` to `NatCorder.Inputs`.
++ Refactored recording clock namespace from `NatCorderU.Core.Clocks` to `NatCorder.Clocks`.
++ Refactored `CameraRecorder` to `CameraInput`.
++ Refactored `AudioRecorder` to `AudioInput`.
++ Refactored `IClock.CurrentTimestamp` to `IClock.Timestamp`.
++ Deprecated `NatCorder` class.
++ Deprecated `RecordingCallback` delegate type.
++ Deprecated `Container` enum.
++ Deprecated `VideoFormat` struct.
++ Deprecated `AudioFormat` struct.
++ Deprecated `IRecorder` struct.
+
+## NatCorder 1.4.1
++ Greatly improved memory stability on iOS.
++ Fixed crash when GIF recording is stopped on iOS.
++ Fixed crash when recording MP4 with audio on Android.
+
 ## NatCorder 1.4.0
 + Greatly improved recording stability and performance on Android. As a result, NatCorder now requires a minimum of API level 23.
 + Greatly improved recording stability and performance on iOS Metal. As a result, NatCorder now requires a minimum of iOS 8.

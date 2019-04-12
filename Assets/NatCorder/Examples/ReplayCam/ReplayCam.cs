@@ -3,7 +3,7 @@
 *   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatCorderU.Examples {
+namespace NatCorder.Examples {
 
     #if UNITY_EDITOR
 	using UnityEditor;
@@ -11,9 +11,9 @@ namespace NatCorderU.Examples {
     using UnityEngine;
     using UnityEngine.UI;
     using System.Collections;
-    using Core;
-    using Core.Recorders;
-    using Core.Clocks;
+    using Clocks;
+    using Inputs;
+    
 
     public class ReplayCam : MonoBehaviour {
 
@@ -34,23 +34,27 @@ namespace NatCorderU.Examples {
         public bool recordMicrophone;
         public AudioSource microphoneSource;
 
-        private CameraRecorder videoRecorder;
-        private AudioRecorder audioRecorder;
+        private MP4Recorder videoRecorder;
         private IClock recordingClock;
+        private CameraInput cameraInput;
+        private AudioInput audioInput;
 
-        public void StartRecording () {
-            // Create recording formats
-            var videoFormat = new VideoFormat(videoWidth, videoHeight);
-            var audioFormat = recordMicrophone ? AudioFormat.Unity : AudioFormat.None;
-            // Create a recording clock for generating timestamps
-            recordingClock = new RealtimeClock();
+        public void StartRecording () {            
             // Start recording
-            NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnReplay);
-            videoRecorder = CameraRecorder.Create(Camera.main, recordingClock);
-            // Start microphone and create audio recorder
+            recordingClock = new RealtimeClock();
+            videoRecorder = new MP4Recorder(
+                videoWidth,
+                videoHeight,
+                30,
+                recordMicrophone ? AudioSettings.outputSampleRate : 0,
+                recordMicrophone ? (int)AudioSettings.speakerMode : 0,
+                OnReplay
+            );
+            // Create recording inputs
+            cameraInput = new CameraInput(videoRecorder, recordingClock, Camera.main);
             if (recordMicrophone) {
                 StartMicrophone();
-                audioRecorder = AudioRecorder.Create(microphoneSource, true, recordingClock);
+                audioInput = new AudioInput(videoRecorder, recordingClock, microphoneSource, true);
             }
         }
 
@@ -67,14 +71,14 @@ namespace NatCorderU.Examples {
         }
 
         public void StopRecording () {
-            // Stop the microphone if we used it for recording
+            // Stop the recording inputs
             if (recordMicrophone) {
                 StopMicrophone();
-                audioRecorder.Dispose();
+                audioInput.Dispose();
             }
-            // Stop the recording
+            cameraInput.Dispose();
+            // Stop recording
             videoRecorder.Dispose();
-            NatCorder.StopRecording();
         }
 
         private void StopMicrophone () {

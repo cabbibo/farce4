@@ -1,3 +1,25 @@
+## NatMic 1.3.0
++ Completely overhauled front-end API to provide a more device-oriented approach to handling audio input.
++ Added the concept of an audio device with a corresponding `IAudioDevice` interface, which is a source for audio data.
++ Added `AudioDevice` class where one instance corresponds to an available hardware audio input device.
++ Added `VirtualDevice` class that can be used as an audio device that is backed by a Unity `AudioSource` or `AudioListener` component.
++ Added `MixerDevice` virtual device which mixes audio from multiple `IAudioDevice` instances. This is useful for mixing game and microphone audio into one audio stream.
++ Added `IAudioProcessor` interface which receives audio data from an `IAudioDevice`.
++ Added support for running multiple audio input devices at the same time on platforms and devices that support it.
++ Fixed audio being re-routed to speakers when recording on iOS.
++ Refactored NatMic namespace from `NatMicU.Core` to `NatMic`.
++ Refactored `IRecorder` interface to `IAudioRecorder`.
++ Deprecated `NatMic` class.
++ Deprecated `SampleBufferCallback`.
++ Deprecated `Format` struct.
++ Deprecated `RealtimeClip` audio recorder.
++ NatMic now requires Android API level 23.
++ NatMic now requires iOS 10.
+
+## NatMic 1.2.1
++ Fixed `ArrayOutOfBoundsException` when recording microphone audio with game audio on Android.
++ Fixed crash when recording microphone audio with game audio on iOS.
+
 ## NatMic 1.2.0
 + NatMic now supports multi-channel microphone audio. On platforms that don't support this, NatMic will automatically interleave the mono data across the number of requested channels.
 + NatMic now features a device enumeration API. You can now select which audio input device to record from. See the `Device` class.

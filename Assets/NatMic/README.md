@@ -1,158 +1,94 @@
 # NatMic API
-NatMic is a low-latency native microphone API for Unity Engine. NatMic provides a minimal API for streaming audio data directly from the microphone to Unity. NatMic's features include:
-+ Low-latency microphone recording on dedicated audio threads.
-+ Control microphone format like sample rate.
+NatMic is a low-latency native microphone API for Unity Engine. NatMic provides a minimal API for streaming audio data directly from audio input devices to Unity. NatMic's features include:
++ Low-latency microphone recording.
++ Control microphone format like sample rate and channel count.
 + Mix microphone audio with game audio.
 + Record to audio files, currently supporting recording to WAV files.
 + Record on iOS, Android, macOS, and Windows.
 
 ## Fundamentals of Recording
-NatMic works by forwarding microphone events and accompanying data to a provided callback. When a microphone event is raised, like the microphone starting or a new sample buffer being available, NatMic will invoke the callback with the `AudioEvent`, the sample buffer, the sample buffer's timestamp, and the current `Format` of the microphone:
+NatMic abstracts audio input devices with the `IAudioDevice` interface. This interface supports fundamental audio recording operations:
 ```csharp
-void OnSampleBuffer (AudioEvent audioEvent, float[] sampleBuffer, long timestamp, Format format) {
-    // This callback is invoked on the NatMic microphone thread
-    // Use the sample buffer here
+// Is the device currently recording?
+bool IsRecording { get; }
+// Start recording
+void StartRecording (int requestedSampleRate, int requestedChannelCount, IAudioProcessor processor);
+// Stop recording
+void StopRecording ();
+```
+
+When `StartRecording` is called on an audio device, an `IAudioProcessor` must be provided. This audio processor will receive the raw audio data being streamed from the audio device:
+```csharp
+public interface IAudioProcessor {
+    // Audio data is sent to this function by the audio device
+    void OnSampleBuffer (float[] sampleBuffer, int sampleRate, int channelCount, long timestamp);
 }
 ```
 
-The `AudioEvent` provides information regarding what event the callback is being invoked for:
+NatMic always provides audio data in a floating-point (`float`) sample buffer, interleaved by channel.
+
+## Audio Devices
+To get access to physical (hardware) audio input devices, use the `AudioDevice.Devices` getter property. This property provides an array of audio input devices, each corresponding to a hardware microphone. In addition to supporting the methods defined in `IAudioDevice`, each `AudioDevice` instance provides identifying information like its display-friendly name, its unique ID, and whether it supports echo cancellation.
 ```csharp
-enum AudioEvent {
-    // The microphone has started
-    OnInitialize = 1,
-    // The microphone has reported a new sample buffer
-    OnSampleBuffer = 2,
-    // The microphone has stopped
-    OnFinalize = 3
-}
+// Get a microphone
+var microphone = AudioDevice.Devices[0];
+// Start recording
+microphone.StartRecording(...);
 ```
 
-The `Format` provides information about the microphone's current audio format:
+### Virtual Devices
+Virtual devices are devices that are implemented in software. They are usually not primary generators of audio data, but act as such. You can use a virtual device as an `IAudioDevice` that generates audio from a Unity `AudioSource` or `AudioListener` component:
 ```csharp
-struct Format {
-    // Audio sample rate
-    public int sampleRate;
-    // Audio channel count
-    public int channelCount;
-}
+// Create an audio device that is backed by the scene's AudioListener
+var gameDevice = new VirtualDevice(audioSource);
+// Use it like any other NatMic audio device
+gameDevice.StartRecording(...);
 ```
 
-You can start recording by calling the `StartRecording` function, passing in a preferred microphone format and a `SampleBufferCallback`:
+### Mixing Microphone and Game Audio
+A very handy virtual device is the `MixerDevice`. This device can blend audio from multiple `IAudioDevice` instances into one audio stream. Here is an example showing how it is used:
 ```csharp
-NatMic.StartRecording(Format.Default, OnSampleBuffer);
+// Get a microphone
+var microphoneDevice = AudioDevice.Devices[0];
+// Create a virtual device from the scene's AudioListener
+var gameDevice = new VirtualDevice(audioListener);
+// Now create a mixer device that will mix audio from both of these devices
+var mixerDevice = new MixerDevice(microphoneDevice, gameDevice);
+// Use the mixer device like any other NatMic audio device
+mixerDevice.StartRecording(...);
 ```
 
-NatMic will then invoke the callback repeatedly with microphone data until `StopRecording` is called:
+**Note that when using a mixer device, the sample rate and channel count of every source device MUST be the same**.
+
+## Storing Audio with Recorders
+NatMic provides helper classes for storing audio data into a reusable container. These classes are all instances of `IAudioRecorder`. Currently, NatMic includes a `WAVRecorder` for recording audio data to a .wav file on the file system; and a `ClipRecorder` for recording audio data to a Unity `AudioClip`, for use with an `AudioSource` component.
+
+Every `IAudioRecorder` is an audio processor, so it naturally inherits the `IAudioProcessor` interface. As a result, it can be passed directly to an audio device for a hands-free recording process:
 ```csharp
-IEnumerator Start () {
-    // Start the microphone
-    NatMic.StartRecording(Format.Default, OnSampleBuffer);
-    // Wait for ten seconds
-    yield return new WaitForSeconds(10f);
-    // Stop the microphone
-    NatMic.StopRecording();
-}
-
-void OnSampleBuffer (AudioEvent audioEvent, float[] sampleBuffer, long timestamp, Format format) {
-    switch (audioEvent) {
-        case AudioEvent.OnInitialize: break;    // Do stuff...
-        case AudioEvent.OnSampleBuffer: break;  // Do stuff...
-        case AudioEvent.OnFinalize: break;      // Do stuff...
-    }
-}
-```
-
-## Recording to Audio Files
-NatMic allows you to record microphone audio to audio files. To record audio to a file, you will use instances of the `IRecorder` interface:
-```csharp
-public interface IRecorder {
-    // Start recording
-    void StartRecording (RecordingCallback callback);
-    // Commit audio data to be written to an audio file
-    void CommitSamples (float[] samples, long timestamp);
-    // Stop recording and invoke the RecordingCallback
-    void Dispose ();
-}
-```
-
-Currently, NatMic supports recording to `.wav` files. We expect to add support for `m4a` in a later release, and potentially `.mp3`. Here is an example showing how to record the mic to a WAVE file:
-```csharp
-// Callback invoked by NatMic
-void OnSampleBuffer (AudioEvent audioEvent, float[] sampleBuffer, long timestamp, Format format) {
-    switch (audioEvent) {
-        case AudioEvent.OnInitialize:
-            // Create a WAV recorder to record the audio to a file
-            recorder = new WAVRecorder(format);
-            // Start the recorder, passing a callback to be invoked once recording is complete
-            recorder.StartRecording(OnWAVRecording);
-            break;
-        case AudioEvent.OnSampleBuffer:
-            // Commit the sample buffer to the WAV recorder
-            recorder.CommitSamples(sampleBuffer, timestamp);
-            break;
-        case AudioEvent.OnFinalize:
-            // Stop recording the WAV file and dispose the recorder
-            recorder.Dispose();
-            break;
-    }
-}
-
-void OnWAVRecording (string path) {
-    // Use the recorded WAV file at `path`
-}
-```
-
-## Recording with Game Audio
-NatMic is able to provide the microphone audio data mixed with game audio. This is useful for doing things like voice overs or player commentary over gameplay. The workflow is largely the same: Simply call `NatMic.StartRecording`, passing in an `AudioSource` or an `AudioListener` to use for audio overlay on the microphone audio:
-```csharp
-public AudioListener audioListener; // This listener can 'hear' all game audio
+// Create a WAV recorder
+var wavRecorder = new WAVRecorder(filePath);
+// Get a microphone
+var audioDevice = AudioDevice.Devices[0];
+// Record the microphone audio to the WAV recorder
+audioDevice.StartRecording(sampleRate = ..., channelCount = ..., wavRecorder);
 ...
-NatMic.StartRecording(audioListener, Format.DefaultWithMixing, OnSampleBuffer);
-...
-void OnSampleBuffer (AudioEvent audioEvent, float[] sampleBuffer, long timestamp, Format format) {
-    // `sampleBuffer` contains microphone audio overlaid with scene audio from the AudioListener
-}
+// Stop recording
+audioDevice.StopRecording();
+wavRecorder.Dispose();
+Debug.Log("Microphone audio was recorded to a WAV file at: "+wavRecorder.FilePath);
 ```
 
 ## Using NatMic with NatCorder
-NatMic is built with NatCorder integration in mind. A common use case would be recording a video with NatCorder, and adding microphone audio with NatMic. To achieve this, simply send NatMic's microphone sample buffer to NatCorder's `CommitSamples` function:
-```csharp
-public void StartRecording () {
-    // Start the microphone with NatMic
-    var microphoneFormat = Format.Default;
-    NatMic.StartRecording(microphoneFormat, OnSampleBuffer);
-    // Start recording with NatCorder
-    var audioFormat = new AudioFormat(microphoneFormat.sampleRate, microphoneFormat.channelCount);
-    NatCorder.StartRecording(Container.MP4, VideoFormat.Screen, audioFormat, OnRecording);
-    ...
-}
-
-// Invoked by NatMic on new microphone events
-private void OnSampleBuffer (AudioEvent audioEvent, float[] sampleBuffer, long timestamp, Format format) {
-    // Send sample buffers directly to NatCorder for recording
-    if (audioEvent == AudioEvent.OnSampleBuffer)
-        NatCorder.CommitSamples(sampleBuffer, clock.CurrentTimestamp);
-}
-```
-
-Note that when `CommitSamples` is called, we use a NatCorder clock's timestamp instead of passing in the timestamp from NatMic (the `timestamp` argument in `OnSampleBuffer`). This is the case because NatCorder expects that all timestamps are on its own clock, whereas NatMic's timestamps are on a different clock.
-
 Check out the [NatMicCorder Demo](https://github.com/olokobayusuf/NatMicCorder-Demo) for a full NatMic-NatCorder integration example.
-
-## Running on WebGL
-NatMic has an experimental WebGL backend. The backend is marked experimental because of a number of limitations:
-- Audio mixing does not work. This is because Unity doesn't support the `OnAudioFilterRead` function on WebGL, so NatMic cannot retrieve engine audio to perform mixing. As a result, the `NatMic.StartRecording` overloads that take in an `AudioSource` or `AudioListener` will not work.
-- The `WAVRecorder` recorder does not work on WebGL. This is because there is no file system on WebGL, so the audio cannot be written to any file.
-- NatMic will not work when built with the `WebAssemsbly` linker target. It will only work with `asm.js`.
 
 ## Tutorials
 - [Unity Microphone That Works](https://medium.com/@olokobayusuf/natmic-api-unity-microphone-that-works-264d2b73cfa8)
 
 ## Requirements
-- On Android, NatMic requires API Level 18 and up
-- On iOS, NatMic requires iOS 7 and up
-- On macOS, NatMic requires macOS 10.10 and up
-- On Windows, NatMic requires Windows 8 and up
+- On Android, NatMic requires API Level 23+
+- On iOS, NatMic requires iOS 10+
+- On macOS, NatMic requires macOS 10.10+
+- On Windows, NatMic requires Windows 10+
 
 ## Quick Tips
 - Please peruse the included scripting reference [here](https://olokobayusuf.github.io/NatMic-Docs/)

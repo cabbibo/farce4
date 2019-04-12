@@ -74,7 +74,7 @@
 
                 float hue = _Hue + _Time.y * .6 + length(col) * .2;
                 float4 newCol = float4(hsv( hue ,.8,1) , 1);
-                col *= newCol;
+                //col *= newCol;
 
                 return col;
             }

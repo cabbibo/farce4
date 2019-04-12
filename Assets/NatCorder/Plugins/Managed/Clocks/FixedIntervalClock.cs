@@ -3,7 +3,7 @@
 *   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatCorderU.Core.Clocks {
+namespace NatCorder.Clocks {
 
     using Docs;
 
@@ -29,8 +29,8 @@ namespace NatCorderU.Core.Clocks {
         /// Current timestamp in nanoseconds.
         /// The very first value reported by this property will always be zero.
         /// </summary>
-        [Doc(@"CurrentTimestamp")]
-        public long CurrentTimestamp {
+        [Doc(@"Timestamp")]
+        public long Timestamp {
             get {
                 long current;
                 lock (timeFence)

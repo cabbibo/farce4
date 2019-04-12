@@ -99,7 +99,7 @@ public class TutorialButton : MonoBehaviour
 
       if( Time.time-lastFlash > flashRate  ){
         lastFlash = Time.time;
-        targetCol  = Random.ColorHSV(0f,.999f,1f, 1f,1f, 1f);     
+        targetCol  = Random.ColorHSV(0f,.999f,.6f, .63f,1f, 1f);     
       }
 
       r.material.SetColor("_Color",Color.Lerp(r.material.GetColor("_Color") , targetCol , lerpRate));

@@ -3,37 +3,38 @@
 *   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatCorderU.Examples {
+namespace NatCorder.Examples {
 
     #if UNITY_EDITOR
 	using UnityEditor;
 	#endif
     using UnityEngine;
-    using Core;
-    using Core.Recorders;
+    using Clocks;
+    using Inputs;
 
     public class Giffy : MonoBehaviour {
         
         [Header("GIF Settings")]
         public int imageWidth = 640;
         public int imageHeight = 480;
+        public float frameDuration = 0.1f; // seconds
 
-        private CameraRecorder recorder;
+        private GIFRecorder gifRecorder;
+        private CameraInput cameraInput;
 
         public void StartRecording () {
             // Start recording
-            var videoFormat = new VideoFormat(imageWidth, imageHeight, 10);
-            NatCorder.StartRecording(Container.GIF, videoFormat, AudioFormat.None, OnGIF);
-            // Create a camera recorder
-            recorder = CameraRecorder.Create(Camera.main);
+            gifRecorder = new GIFRecorder(imageWidth, imageHeight, frameDuration, OnGIF);
+            // Create a camera input
+            cameraInput = new CameraInput(gifRecorder, new RealtimeClock(), Camera.main);
             // Get a real GIF look by skipping frames
-            recorder.recordEveryNthFrame = 5;
+            cameraInput.recordEveryNthFrame = 5;
         }
 
         public void StopRecording () {
             // Stop the recording
-            recorder.Dispose();
-            NatCorder.StopRecording();
+            cameraInput.Dispose();
+            gifRecorder.Dispose();
         }
 
         private void OnGIF (string path) {

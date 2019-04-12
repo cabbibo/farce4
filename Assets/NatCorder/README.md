@@ -1,85 +1,92 @@
 # NatCorder API
 NatCorder is a lightweight, easy-to-use, native video recording API for iOS and Android. NatCorder comes with a rich featureset including:
 + Record anything that can be rendered into a texture.
++ Record to MP4 videos and animated GIF images.
 + Control recording quality and file size with bitrate and keyframe interval.
 + Record at any resolution. You get to specify what resolution recording you want.
-+ Record GIF's.
 + Get path to recorded video in device storage.
 + Record game audio with video.
-+ Support for recording on macOS--in the Editor or in Standalone builds.
-+ Support for recording on Windows--in the Editor or in Standalone builds.
++ Support for recording on macOS in the Editor or in Standalone builds.
++ Support for recording on Windows in the Editor or in Standalone builds.
 + Experimental support for recording on WebGL.
 
 ## Fundamentals of Recording
-NatCorder provides a simple recording API with the `NatCorder` class. **NatCorder works by encoding video and audio frames on demand**. To start recording, you will provide a `Container` format which tells NatCorder what kind of video file you want (it currently supports `MP4` and `GIF`); a `VideoFormat` for specifying video configuration settings; an `AudioFormat` for specifying audio configuration settings; and a `RecordingCallback` which will be invoked with the path to the recorded video file:
+NatCorder provides a simple recording API with instances of the `IMediaRecorder` interface. **NatCorder works by encoding video and audio frames on demand**. To start recording, simply create a recorder corresponding to the media type you want to record:
 ```csharp
-NatCorder.StartRecording(
-    Container.GIF,          // Specify the container format as GIF
-    new VideoFormat(...),   // Video configuration like width, height, framerate
-    new AudioFormat(...),   // Audio configuration like sample rate, channel count
-    OnRecording             // Recording callback
-);
+var gifRecorder = new GIFRecorder(...);
+var videoRecorder = new MP4Recorder(...);
 ```
 
-Once `StartRecording` is called, you then commit frames to NatCorder. You can commit video and audio frames to NatCorder. These committed frames are then encoded and multiplexed into a media file. When committing frames, you must provide the frame data with a corresponding timestamp. The spacing timestamps determine the final frame rate of the recording.
+Once you create a recorder, you then commit frames to it. You can commit video and audio frames to these recorders. These committed frames are then encoded into a media file. When committing frames, you must provide the frame data with a corresponding timestamp. The spacing timestamps determine the final frame rate of the recording.
 
 ### Committing Video Frames
 NatCorder records video using `RenderTexture`s. The general workflow is a three-step process:
-1. Acquire a `RenderTexture` using `NatCorder.AcquireFrame`
+1. Acquire a `RenderTexture` using `IMediaRecorder.AcquireFrame`
 2. Blit or render to the `RenderTexture`
-3. Commit the `RenderTexture` for encoding using `NatCorder.CommitFrame`
+3. Commit the `RenderTexture` for encoding using `IMediaRecorder.CommitFrame`
 
 When committing the `RenderTexture`s for encoding, you will need to provide a corresponding timestamp. For this purpose, you can use implementations of the `IClock` interface. Here is an example illustrating recording a `WebCamTexture`:
 ```csharp
 WebCamTexture webcamPreview; // Start this somewhere
+IMediaRecorder mediaRecorder;
 IClock clock;
 
 void StartRecording () {
-    // Create a clock for generating timestamps
-    clock = new RealtimeClock();
     // Start recording
-    NatCorder.StartRecording(...);
+    clock = new RealtimeClock();
+    mediaRecorder = new ... // Create a recorder here
 }
 
 void Update () {
     // Check that we are recording
-    if (NatCorder.IsRecording) {
-        // Acquire an encoder frame
-        var frame = NatCorder.AcquireFrame();
-        // Blit the webcam preview to the frame
-        Graphics.Blit(webcamPreview, frame);
-        // Commit the frame to the encoder, with the current timestamp from the clock
-        NatCorder.CommitFrame(frame, clock.CurrentTimestamp);
+    if (mediaRecorder != null) {
+        var frame = mediaRecorder.AcquireFrame();           // Acquire a video frame
+        Graphics.Blit(webcamPreview, frame);                // Blit the webcam preview to the frame
+        mediaRecorder.CommitFrame(frame, clock.Timestamp);  // Commit the frame to the recorder
     }
+}
+
+void StopRecording () {
+    // Stop recording
+    mediaRecorder.Dispose();
+    mediaRecorder = null;
 }
 ```
 
 ### Committing Audio Frames
-NatCorder records audio using interleaved PCM sample buffers (`float[]`). Similar to recording video frames, you will call the `NatCorder.CommitSamples` function passing in a sample buffer and a corresponding timestamp. It is important that the timestamps synchronize with those of video, so make sure to use the same `IClock` for generating video and audio timestamps. Below is an example illustrating recording game audio using Unity's `OnAudioFilterRead` callback:
+NatCorder records audio provided as interleaved PCM sample buffers (`float[]`). Similar to recording video frames, you will call the `IMediaRecorder.CommitSamples` method, passing in a sample buffer and a corresponding timestamp. It is important that the timestamps synchronize with those of video, so make sure to use the same `IClock` for generating video and audio timestamps. Below is an example illustrating recording game audio using Unity's `OnAudioFilterRead` callback:
 ```csharp
 void OnAudioFilterRead (float[] data, int channels) {
     // Check that we are recording
-    if (NatCorder.IsRecording)
-        // Commit the frame
-        NatCorder.CommitSamples(data, clock.CurrentTimestamp);
+    if (mediaRecorder != null)
+        // Commit the audio frame
+        mediaRecorder.CommitSamples(data, clock.Timestamp);
 }
 ```
 
-## Easier Recording with Recorders
-In most cases, you will likely just want to record a game camera optionally with game audio. To do so, you don't need to manually acquire, blit, and commit frames. Instead, you can use NatCorder's `Recorders`. A `Recorder` is a lightweight utility class that eases out the process of recording some aspect of a Unity application. NatCorder comes with two recorders: `CameraRecorder` and `AudioRecorder`. You can create your own recorders to do more interesting things like add a watermark to the video, or retime the video. Here is a simple example showing recording a game camera:
+## Easier Recording with Recorder Inputs
+In most cases, you will likely just want to record a game camera optionally with game audio. To do so, you don't need to manually acquire, blit, and commit frames. Instead, you can use NatCorder's recorder `Inputs`. A recorder `Input` is a lightweight utility class that eases out the process of recording some aspect of a Unity application. NatCorder comes with two recorder inputs: `CameraInput` and `AudioInput`. You can create your own recorder inputs to do more interesting things like add a watermark to the video, or retime the video. Here is a simple example showing recording a game camera:
 ```csharp
+IMediaRecorder mediaRecorder;
+CameraInput cameraInput;
+AudioInput audioInput;
+
 void StartRecording () {
     // Start recording
-    NatCorder.StartRecording(Container.MP4, videoFormat, audioFormat, OnRecording);
-    // Create a camera recorder to record the main camera
-    videoRecorder = CameraRecorder.Create(Camera.main);
+    mediaRecorder = new ...;
+    // Create a camera input to record the main camera
+    cameraInput = CameraInput.Create(mediaRecorder, Camera.main);
+    // Create an audio input to record the scene's AudioListener
+    audioInput = AudioInput.Create(mediaRecorder, sceneAudioListener);
 }
 
 void StopRecording () {
-    // Destroy the camera recorder
-    videoRecorder.Dispose();
+    // Destroy the recording inputs
+    cameraInput.Dispose();
+    audioInput.Dispose();
     // Stop recording
-    NatCorder.StopRecording();
+    mediaRecorder.Dispose();
+    mediaRecorder = null;
 }
 ```
 
@@ -88,15 +95,12 @@ ___
 ## Limitations of the WebGL Backend
 The WebGL backend is currently experimental. As a result, it has a few limitations in its operations. Firstly, it is an 'immediate-encode' backend. This means that video frames are encoded immediately they are committed to NatCorder. As a result, there is no support for custom frame timing (the `timestamp` provided to `CommitFrame` is always ignored).
 
-Secondly, because Unity does not support the `OnAudioFilterRead` callback on WebGL, we cannot record game audio on WebGL (using an `AudioSource` or `AudioListener`). This is a limitation of Unity's WebGL implementation. However, you can still record raw audio data using the `NatCorder.CommitSamples` API.
+Secondly, because Unity does not support the `OnAudioFilterRead` callback on WebGL, we cannot record game audio on WebGL (using an `AudioSource` or `AudioListener`). This is a limitation of Unity's WebGL implementation. However, you can still record raw audio data using the `IMediaRecorder.CommitSamples` API.
 
-Videos recorded on WebGL may be recorded with the VP8/9 codec or H.264 codec, depending on the browser and device. Videos are always recorded in the `webm` container format.
+The `MP4Recorder` may record videos with the VP8/9 codec or H.264 codec, depending on the browser and device. These videos are always recorded in the `webm` container format. The `GIFRecorder` is not supported on WebGL.
 
 ## Using NatCorder with NatCam
-If you use NatCorder with our NatCam camera API, then you will have to remove duplicate copies of libraries that are shared by both API's. **Make sure to delete NatCam's copies of the libraries**:
-- The `NatRender` directory in 'NatCam > Plugins > Managed'
-- `NatRender.aar` in 'NatCam > Plugins > Android'
-- `libNatRender.a` in 'NatCam > Plugins > iOS'
+If you use NatCorder with our NatCam camera API, then you will have to remove a duplicate copy of the `NatRender.aar` library **from NatCam**. The library can be found at `NatCam > Plugins > Android > NatRender.aar`.
 
 ## Tutorials
 - [Unity Recording Made Easy](https://medium.com/@olokobayusuf/natcorder-unity-recording-made-easy-f0fdee0b5055)
@@ -110,8 +114,7 @@ If you use NatCorder with our NatCam camera API, then you will have to remove du
 - On WebGL, NatCorder requires Chrome 47 or Safari 27 and up
 
 ## Notes
-- NatCorder doesn't have full support for recording UI canvases that are in Screen Space - Overlay mode. See [here](https://forum.unity3d.com/threads/render-a-canvas-to-rendertexture.272754/#post-1804847).
-- On Android, it is strongly recommended to enable 'Multithreaded Rendering' in Player Settings. It greatly improves recording performance.
+- NatCorder doesn't support recording UI canvases that are in Screen Space - Overlay mode. See [here](https://forum.unity3d.com/threads/render-a-canvas-to-rendertexture.272754/#post-1804847).
 - On iOS, NatCorder requires the Metal graphics API. OpenGL ES is not supported on iOS.
 - When building for WebGL, make sure that 'Use Prebuild Engine' is disabled in Build Settings.
 - When recording audio, make sure that the 'Bypass Listener Effects' and 'Bypass Effects' flags on your `AudioSource`s are turned off.

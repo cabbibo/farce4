@@ -1,82 +1,41 @@
 /* 
 *   NatMic
-*   Copyright (c) 2018 Yusuf Olokoba
+*   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatMicU.Core.Recorders {
+namespace NatMic.Recorders {
 
     using UnityEngine;
     using System;
     using System.IO;
-    using Utilities;
     using Docs;
 
     /// <summary>
     /// Recorder for recording audio to an AudioClip
     /// </summary>
     [Doc(@"ClipRecorder")]
-    public sealed class ClipRecorder : IRecorder {
-
-        #region --Op vars--
-        /// <summary>
-        /// Format of audio data that will be recorded
-        /// </summary>
-        [Doc(@"IRecorderFormat")]
-        public Format Format { get; private set; }
-        private readonly Action<AudioClip> Callback;
-        private MemoryStream audioBuffer;
-        #endregion
-
+    public sealed class ClipRecorder : IAudioRecorder {
 
         #region --Client API--
-
         /// <summary>
         /// Create an AudioClip recorder
         /// </summary>
-        /// <param name="format">Audio data format</param>
+        /// <param name="callback">Callback invoked with AudioClip once the recording is finished</param>
         [Doc(@"ClipRecorderCtor")]
-        public ClipRecorder (Format format, Action<AudioClip> callback) {
-            Format = format;
-            Callback = callback;
+        public ClipRecorder (Action<AudioClip> callback) {
+            this.callback = callback;
+            this.audioBuffer = new MemoryStream();
         }
 
         /// <summary>
-        /// Start recording.
+        /// Stop writing and invoke any callbacks
         /// </summary>
-        [Doc(@"IRecorderStartRecording", @"IRecorderStartRecordingDescription")]
-        public void StartRecording () {
-            audioBuffer = new MemoryStream();
-        }
-
-        /// <summary>
-        /// Commit audio data to be recorded
-        /// </summary>
-        /// <param name="samples">Audio sample buffer</param>
-        /// <param name="timestamp">Timestamp for the sample buffer in nanoseconds</param>
-        [Doc(@"IRecorderCommitSamples")]
-        public void CommitSamples (float[] samples, long timestamp) {
-            // State checking
-            if (audioBuffer == null) {
-                Debug.LogError("NatMic Error: ClipRecorder::StartRecording must be called before committing samples");
-                return;
-            }
-            if (samples == null) {
-                Debug.LogError("NatMic Error: ClipRecorder cannot commit samples with null buffer");
-                return;
-            }
-            // Write
-            var byteSamples = new byte[Buffer.ByteLength(samples)];
-            Buffer.BlockCopy(samples, 0, byteSamples, 0, byteSamples.Length);
-            audioBuffer.Write(byteSamples, 0, byteSamples.Length);
-        }
-
-        /// <summary>
-        /// Stop writing and invoke recording callback
-        /// </summary>
-        [Doc(@"IRecorderDispose")]
+        [Doc(@"Dispose")]
         public void Dispose () {
-            if (audioBuffer == null)
+            if (audioBuffer.Length == 0) {
+                audioBuffer.Dispose();
                 return;
+            }
             var byteSamples = audioBuffer.ToArray();
             var totalSampleCount = byteSamples.Length / sizeof(float); 
             var samples = new float[totalSampleCount];  
@@ -84,17 +43,26 @@ namespace NatMicU.Core.Recorders {
             Buffer.BlockCopy(byteSamples, 0, samples, 0, byteSamples.Length);
             audioBuffer.Dispose();
             audioBuffer = null;
-            EventUtility.Dispatch(() => {
-                var audioClip = AudioClip.Create(
-                    recordingName,
-                    totalSampleCount / Format.channelCount,
-                    Format.channelCount,
-                    Format.sampleRate,
-                    false
-                );
-                audioClip.SetData(samples, 0);
-                Callback(audioClip);
-            });
+            // Create audio clip
+            var audioClip = AudioClip.Create(recordingName, totalSampleCount / channelCount, channelCount, sampleRate, false);
+            audioClip.SetData(samples, 0);
+            callback(audioClip);
+        }
+        #endregion
+
+
+        #region --Operations--
+
+        private readonly Action<AudioClip> callback;
+        private MemoryStream audioBuffer;
+        private int sampleRate, channelCount;
+
+        void IAudioProcessor.OnSampleBuffer (float[] sampleBuffer, int sampleRate, int channelCount, long timestamp) {
+            this.sampleRate = sampleRate;
+            this.channelCount = channelCount;
+            var byteSamples = new byte[Buffer.ByteLength(sampleBuffer)];
+            Buffer.BlockCopy(sampleBuffer, 0, byteSamples, 0, byteSamples.Length);
+            audioBuffer.Write(byteSamples, 0, byteSamples.Length);
         }
         #endregion
     }

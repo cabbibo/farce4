@@ -5,7 +5,7 @@
 
 //#define DOC_GEN // Internal. Do not use
 
-namespace NatCorderU.Docs {
+namespace NatCorder.Docs {
 
     using System;
     #if DOC_GEN

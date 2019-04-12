@@ -3,7 +3,7 @@
 *   Copyright (c) 2019 Yusuf Olokoba
 */
 
-namespace NatCorderU.Examples {
+namespace NatCorder.Examples {
 
 	using System.Collections;
 	using System.Collections.Generic;

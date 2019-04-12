@@ -1,11 +1,11 @@
 /* 
 *   NatMic
-*   Copyright (c) 2018 Yusuf Olokoba
+*   Copyright (c) 2019 Yusuf Olokoba
 */
 
 //#define DOC_GEN // Internal. Do not use
 
-namespace NatMicU.Docs {
+namespace NatMic.Docs {
 
     using System;
     #if DOC_GEN
