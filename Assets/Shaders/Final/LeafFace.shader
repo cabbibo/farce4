@@ -142,7 +142,7 @@ float3 derivedNormal = cross( normalize(posddx), normalize(posddy) );
                 float3 tCol =texCUBE(_CubeMap , refl );
 
 float3 col;
-                col =  .4*tCol * abs( refl * .3 + .7) * hsv( _Hue +v.uv.y * .3 ,.5,1);//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
+                col =  1.4*tCol * abs( refl * .3 + .7) * hsv( _Hue +v.uv.y * .3 ,.5,1);//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
         
             if( shadow > 0.99 ){discard;}
                 //col = tCol;// normalize(n) * .5 + .5;//lerp(tex2D(_ColorMap , float2(pow( m,4) * .4 + _Swap * .3,0)) * pow(m,4) , tCol,1-m) ;// + tCol * (1-pow( m,20));// * _Color;// hsv( v.uv.x * .4 + v.debug.x * .4 + v.debug.y * 10 , .7,1);

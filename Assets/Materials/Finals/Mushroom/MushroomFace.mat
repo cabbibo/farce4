@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorMap:
-        m_Texture: {fileID: 2800000, guid: 00695b1272e68c54d978ca036e18e0f2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 602cb87b6a29443b8636370ea0751574, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap:
@@ -79,15 +79,15 @@ Material:
     - _NoiseSize: 4
     - _NormalSize: 0.4
     - _OcclusionStrength: 1
-    - _Offset: 0.01
-    - _OutlineExtrusion: 0.003
+    - _Offset: 8.41
+    - _OutlineExtrusion: 15.88
     - _Parallax: 0.02
     - _RampStart: 0.0003
     - _Saturation: 1
     - _ShadowDarkness: 0.4
     - _ShadowSize: 0.1
     - _ShinyBlend: 2
-    - _Size: 0.01
+    - _Size: 15.01
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

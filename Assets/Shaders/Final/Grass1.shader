@@ -17,7 +17,11 @@
 		// COLOR PASS
 
 		Pass {
-			Tags{ "LightMode" = "ForwardBase" }
+			//Tags{ "LightMode" = "ForwardBase" }
+              Tags {"Queue"="Transparent" "RenderType"="Transparent" }
+
+               ZWrite Off
+        Blend SrcAlpha OneMinusSrcAlpha
 			Cull Off
 
             // Write to Stencil buffer (so that outline pass can read)
@@ -108,7 +112,7 @@
         //color *= 1-pow(tcol,.9)*.9;//(tcol+1);
 				//if( tcol.a < .8 ){ discard; }
        // if( v.debug.y < .3 ){ discard; }
-        return float4( color.xyz * shadow, 1.);
+        return float4( color.xyz , .5);
 			}
 
 			ENDCG
