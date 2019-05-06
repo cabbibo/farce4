@@ -21,6 +21,8 @@ public class FaceController : MonoBehaviour
 
         void Awake()
         {
+
+          print("SPAWNING");
             mesh = new Mesh();
 //            m_MeshRenderer = GetComponent<MeshRenderer>();
             face = GetComponent<ARFace>();

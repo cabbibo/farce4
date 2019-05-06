@@ -254,7 +254,7 @@ void WonkyTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID)
     int row = idInTube / _TubeWidth;
     int col = pID % _TubeWidth;
 
-    float rowVal = float(row) / float(_TubeLength);
+    float rowVal = (float(row)+.01) / float(_TubeLength);
     float colVal =  (float(col)/float(_TubeWidth)) ;
 
     float3 upPos; float3 doPos;

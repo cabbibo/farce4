@@ -18,7 +18,7 @@ public class Haptico : MonoBehaviour
           Debug.Log("Your device does not support iOS haptic feedback");
       }
 
-      print( (iOSHapticFeedback.iOSFeedbackType)0 );
+//      print( (iOSHapticFeedback.iOSFeedbackType)0 );
         
     }
 

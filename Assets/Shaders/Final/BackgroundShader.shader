@@ -5,7 +5,7 @@
         _Hue ("_Hue",float) = 1
         _textureY ("TextureY", 2D) = "white" {}
         _textureCbCr ("TextureCbCr", 2D) = "black" {}
-    }
+         }
     SubShader
     {
         Cull Off
@@ -21,7 +21,7 @@
             
             #include "UnityCG.cginc"
 
-            float4x4 _UnityDisplayTransform;
+            uniform float4x4 _UnityDisplayTransform;
             
 
             struct Vertex

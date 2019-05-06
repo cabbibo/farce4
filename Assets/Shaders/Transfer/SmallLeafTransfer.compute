@@ -75,7 +75,7 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     }else{
       fPos = s2.pos;
       fNor = leafDir;
-    fDebug = float2( float(transferID) , 1 );
+      fDebug = float2( float(transferID) , 1 );
       fUV = float2(1,1);
 
     };
@@ -236,7 +236,7 @@ void TipTransferFace (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupI
 
     float d = length( s1.pos - s2.pos );
 
-    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+    float3 fPos; float2 fUV; float3 fNor; float3 fTan;float2 fDebug;
 
 
 
@@ -254,7 +254,7 @@ void TipTransferFace (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupI
     if( which == 0 ){
       fPos = s2.pos -  leafX * fRad -  leafY * fRad;
       fNor = leafDir;
-    fDebug = float2( float(transferID), fRad );
+      fDebug = float2( float(transferID), fRad );
       fUV = float2(0,0);
     }else if( which == 1 ){
       fPos = s2.pos +  leafX * fRad -  leafY * fRad;
@@ -275,6 +275,7 @@ void TipTransferFace (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupI
     };
 
 
+    fTan = normalize( cross( fNor, leafX));
 
 
     pID = safeID(pID,_VertBuffer_COUNT);
@@ -282,6 +283,7 @@ void TipTransferFace (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupI
     _VertBuffer[pID].pos    = fPos;
     _VertBuffer[pID].uv     = fUV;
     _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].tangent  = fTan;
     _VertBuffer[pID].debug  = fDebug;
 
 }

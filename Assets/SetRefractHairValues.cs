@@ -15,9 +15,12 @@ public class SetRefractHairValues : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        body.material.SetTexture("_TextureY" , info.textureY );
-        body.material.SetTexture("_TextureCbCr" , info.textureCbCr );
+
+
+        body.render.material.SetMatrix( "_UnityDisplayTransform", info.displayTransform);
+        body.render.material.SetTexture("_TextureY" , info.textureY );
+        body.render.material.SetTexture("_TextureCbCr" , info.textureCbCr );
     }
 }

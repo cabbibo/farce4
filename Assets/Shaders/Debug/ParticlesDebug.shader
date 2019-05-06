@@ -93,7 +93,7 @@
 
 
         	Vert v = _VertBuffer[base % _Count];
-       		o.worldPos = (v.pos) + extra * _Size;///* .001/(.1+length(v.debug));//*(1/(.1+max(length(v.debug),0)));//mul( worldMat , float4( v.pos , 1.) ).xyz;
+       		o.worldPos = (v.pos) + UNITY_MATRIX_V[2].xyz * .001 + extra * _Size;///* .001/(.1+length(v.debug));//*(1/(.1+max(length(v.debug),0)));//mul( worldMat , float4( v.pos , 1.) ).xyz;
 	        //o.debug = v.debug.x;
 	        o.eye = _WorldSpaceCameraPos - o.worldPos;
           o.nor =v.nor;

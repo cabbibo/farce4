@@ -28,8 +28,10 @@ public class MakeFaceMesh : Cycle {
   public FaceController faceController;
 
   public override void Create(){
-    
 
+    print( ARSubsystemManager.systemState );
+    
+//print( ARSubsystemManager.faceSubsystem.isSupported );
 
     Cycles.Insert(0,verts);
     mesh =  face.Load(title);

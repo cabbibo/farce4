@@ -52,7 +52,7 @@
 
 				///UNITY_INITIALIZE_OUTPUT(varyings, o);
 
-				o.pos = mul(UNITY_MATRIX_VP, float4(fPos,1));
+				o.pos = mul(UNITY_MATRIX_VP, float4(fPos - fNor * .001,1));
 				o.nor = normalize(fNor);
 
 				return o;

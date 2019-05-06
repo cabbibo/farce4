@@ -21,10 +21,19 @@ public class GetBackgroundInfo : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         textureY    = bg.material.GetTexture("_textureY");
         textureCbCr = bg.material.GetTexture("_textureCbCr");
-     //   displayTransform = bg.material.GetMatrix("_UnityDisplayTransform");
+        
+        if( bg.material.HasProperty("_UnityDisplayTransform")){
+        Matrix4x4 udp = bg.material.GetMatrix("_UnityDisplayTransform");
+      
+        if( udp != null){
+            print( udp );
+           displayTransform = udp;
+        }
+    }
+
     }
 }

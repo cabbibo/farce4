@@ -98,10 +98,12 @@ public class Form : Cycle {
   }
 
   public override void WhileDebug(){
+    if( active){
     debugMaterial.SetPass(0);
     debugMaterial.SetBuffer("_VertBuffer", _buffer);
     debugMaterial.SetInt("_Count",count);
     Graphics.DrawProcedural(MeshTopology.Triangles, count * 3 * 2 );
+  }
   }
 
 }

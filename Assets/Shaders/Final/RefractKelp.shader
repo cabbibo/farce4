@@ -61,8 +61,11 @@
             float3 _Color;
             sampler2D _ColorMap;
             sampler2D _NormalMap;
+
+            float4x4 _UnityDisplayTransform;
             sampler2D _TextureY;
             sampler2D _TextureCbCr;
+
 
       float3 _LightPos;
             struct varyings {
@@ -75,7 +78,8 @@
                 float3 worldPos : TEXCOORD6;
                 float3 debug    : TEXCOORD7;
                 float3 closest    : TEXCOORD8;
-                float2 screenPos : TEXCOORD9;
+                float4 screenPos : TEXCOORD9;
+                float4 refractedScreenPos : TEXCOORD10;
                 UNITY_SHADOW_COORDS(2)
             };
 
@@ -105,6 +109,11 @@
                 o.bi = normalize(cross(fTan,fNor));
                 o.debug = float3(debug.x,debug.y,0);
 
+
+                float3 refracted = fPos - .01 * normalize(refract( normalize(o.eye), o.nor , .9 ));
+
+                o.refractedScreenPos = ComputeScreenPos( mul(UNITY_MATRIX_VP, float4(refracted,1)) );
+
                 UNITY_TRANSFER_SHADOW(o,o.worldPos);
 
                 return o;
@@ -112,44 +121,42 @@
 
             float4 frag(varyings v) : COLOR {
         
-                fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.worldPos );
-                
-                float4 nTex = tex2D(_NormalMap,float2(3,1) * .2*v.uv ) * 2 - 1;
-    float3 n =  v.nor * nTex.y  + v.tan * nTex.x * .1+ v.bi * nTex.y*.1;////normalize( normalize(float3( noise(v.worldPos*_NoiseSize) , noise(v.worldPos*_NoiseSize+10000) , noise(v.worldPos*_NoiseSize +100) -.5)) - 6*v.nor);
-            n = normalize(n);
+        
 
-            float3 refl = reflect( normalize( v.eye) , n);
+            float3 col;
+      
 
-                float3 fCol =refl;
-                if( _Swap >=1 ){ fCol =refl.yzx; }
-                if( _Swap >=2 ){ fCol =refl.zxy; }
+            float2 uvVal = (v.refractedScreenPos.xy/v.refractedScreenPos.w );
 
-                refl= fCol;
+             float2 tmp  = uvVal;
+            uvVal.x = (_UnityDisplayTransform[0].x * tmp.x + _UnityDisplayTransform[1].x * (tmp.y) + _UnityDisplayTransform[2].x);
+            uvVal.y = (_UnityDisplayTransform[0].y * tmp.x + _UnityDisplayTransform[1].y * (tmp.y) + (_UnityDisplayTransform[2].y));
+             
+   
+            float y; float4 ycbcr;
+
+            const float4x4 ycbcrToRGBTransform = float4x4(
+                    float4(1.0, +0.0000, +1.4020, -0.7010),
+                    float4(1.0, -0.3441, -0.7141, +0.5291),
+                    float4(1.0, +1.7720, +0.0000, -0.8860),
+                    float4(0.0, +0.0000, +0.0000, +1.0000)
+                );
 
 
-                float m = abs(dot( fCol, _WorldSpaceLightPos0.xyz ));
 
-                float3 tCol =texCUBE(_CubeMap , refl );
 
-float3 col;
-                col =  tCol * hsv(v.uv.x * .3,1,1);//3 * tCol * abs( refl * .3 + .7) * _Color;//lerp(tCol , tex2D(_ColorMap , float2(pow( m,4) * 4 + _Swap * .3,0)) , .6+pow(m,10));// * (fCol * .3 + .7);
-       
-              float2 uvVal = (v.pos.yx / _ScreenParams.yx);
-                float y = tex2D(_TextureY, uvVal).r;
-                float4 ycbcr = float4(y, tex2D(_TextureCbCr, uvVal).rg, 1.0);
 
-                const float4x4 ycbcrToRGBTransform = float4x4(
-                        float4(1.0, +0.0000, +1.4020, -0.7010),
-                        float4(1.0, -0.3441, -0.7141, +0.5291),
-                        float4(1.0, +1.7720, +0.0000, -0.8860),
-                        float4(0.0, +0.0000, +0.0000, +1.0000)
-                    );
 
-                float4 screenCol = mul(ycbcrToRGBTransform, ycbcr);
-                col = hsv(v.uv.x * .3,1,1)  * screenCol.xyz;//tex2D(_TextureY)
+           // uvVal = float2( 1-abs(uvVal.x % 1) , 1-abs(uvVal.y  % 1));
+            y = tex2D(_TextureY, uvVal).r;
+            ycbcr = float4(y, tex2D(_TextureCbCr, uvVal).rg, 1.0);
+            float3 screenCol = mul(ycbcrToRGBTransform, ycbcr);
+fixed shadow = UNITY_SHADOW_ATTENUATION(v,v.worldPos );
+
+                col = screenCol.xyz;//tex2D(_TextureY)
                 //col = tCol;// normalize(n) * .5 + .5;//lerp(tex2D(_ColorMap , float2(pow( m,4) * .4 + _Swap * .3,0)) * pow(m,4) , tCol,1-m) ;// + tCol * (1-pow( m,20));// * _Color;// hsv( v.uv.x * .4 + v.debug.x * .4 + v.debug.y * 10 , .7,1);
 
-                //col *= shadow*.5 + .2;
+                //col *= (shadow*.5 + .5);
                 return float4( col , 1.);
             }
 
