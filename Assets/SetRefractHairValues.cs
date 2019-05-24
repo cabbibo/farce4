@@ -18,9 +18,11 @@ public class SetRefractHairValues : MonoBehaviour
     void LateUpdate()
     {
 
+        if( body.render != null ){
 
         body.render.material.SetMatrix( "_UnityDisplayTransform", info.displayTransform);
         body.render.material.SetTexture("_TextureY" , info.textureY );
         body.render.material.SetTexture("_TextureCbCr" , info.textureCbCr );
+        }
     }
 }

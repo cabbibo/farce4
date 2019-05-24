@@ -37,6 +37,7 @@
 			struct varyings {
 				float4 pos 		: SV_POSITION;
 				float3 nor 		: TEXCOORD0;
+				float3 world 	: TEXCOORD1;
 			};
 
       int _TransferCount;
@@ -54,16 +55,44 @@
 
 				o.pos = mul(UNITY_MATRIX_VP, float4(fPos - fNor * .001,1));
 				o.nor = normalize(fNor);
+				o.world = fPos - fNor * .001;
 
 				return o;
 			}
 
 			float4 frag(varyings v) : COLOR {
-				return float4( _Color , 1.);
+
+				float3 fNor = normalize(cross( ddx( v.world ) , ddy(v.world)));
+				//return float4( _Color , 1.);
+				return float4( fNor * .4 + .7 , 1.);
 			}
 
 			ENDCG
 		}
+
+		  Pass
+    {
+      Tags{ "LightMode" = "ShadowCaster" }
+
+
+      Fog{ Mode Off }
+      ZWrite On
+      ZTest LEqual
+      Cull Off
+      Offset 1, 1
+      CGPROGRAM
+
+      #pragma target 4.5
+      #pragma vertex vert
+      #pragma fragment frag
+      #pragma multi_compile_shadowcaster
+      #pragma fragmentoption ARB_precision_hint_fastest
+
+            #include "UnityCG.cginc"
+            #include "../Chunks/Shadow16.cginc"
+
+      ENDCG
+    }
 
 }
 

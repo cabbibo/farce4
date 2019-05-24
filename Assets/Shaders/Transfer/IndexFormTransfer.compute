@@ -28,8 +28,7 @@ int _SkeletonBuffer_COUNT;
 int _SkeletonTriangleBuffer_COUNT;
 #include "../Chunks/safeID.cginc"
 
-int _VertsPerVert;
-int _NumVertsPerHair;
+
 float3 _CameraUp;
 float3 _CameraRight;
 float3 _CameraForward;

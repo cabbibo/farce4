@@ -8,51 +8,23 @@ public class CaptureTest : MonoBehaviour {
     // a movie using image utility software (eg, QuickTime Pro).
     // The folder to contain our screenshots.
     // If the folder exists we will append numbers to create an empty folder.
-    string folder = "ScreenshotFolder";
+    string folder = "ScreenshotFolder/Next";
     int frameRate = 60;
-    public int superSize;
-    public string folderName;
-
-    private int startFrameCount;
-    public bool capturing;
-    private bool oCapturing;
-
-    private string final;
-
+        
     void Start () {
-
-
-        final = folder+ "/" + folderName;
-
+        // Set the playback framerate (real time will not relate to game time after this).
+        Time.captureFramerate = frameRate;
+        
         // Create the folder
-        System.IO.Directory.CreateDirectory(final);
-
-
+        System.IO.Directory.CreateDirectory(folder);
     }
-
+    
     void Update () {
-
-        if( capturing == true && oCapturing == false ){
-            Time.captureFramerate = frameRate;
-            startFrameCount = Time.frameCount;
-        }
-
-         if( capturing == false && oCapturing == true ){
-            Time.captureFramerate = 0;
-        }
-
-        if( capturing == true ){
-
-
-
-            // Append filename to folder name (format is '0005 shot.png"')
-            string name = string.Format("{0}/shot{1:D04}.png", final, Time.frameCount - startFrameCount );
-
-            // Capture the screenshot to the specified file.
-            ScreenCapture.CaptureScreenshot(name,superSize);
-        }
-        oCapturing = capturing;
+        // Append filename to folder name (format is '0005 shot.png"')
+        string name = string.Format("{0}/shot{1:D04}.png", folder, Time.frameCount );
+        
+        // Capture the screenshot to the specified file.
+        ScreenCapture.CaptureScreenshot(name,4);
+        this.enabled = false;
     }
-
-
 }

@@ -72,19 +72,39 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HueOffset: 0.2
+    - _HueOsscilation: 0.3
+    - _HueSize: 0.2
+    - _HueSpeed: 0.3
+    - _HueStart: 0
+    - _IdHueDif: 1
     - _Intensity: 0.5
+    - _LightHueSize: 0.3
     - _Lightness: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NoiseAmount: 0.3
+    - _NoiseBandVal: 20
     - _NoiseSize: 4
+    - _NoiseSpeed: 100
     - _NormalSize: 0.4
     - _OcclusionStrength: 1
     - _Offset: 8.41
     - _OutlineExtrusion: 15.88
+    - _OutlineHueOsscilation: 0.1
+    - _OutlineHueSize: 0.1
+    - _OutlineHueSpeed: 0.1
+    - _OutlineLightness: 1
+    - _OutlineNoiseAmount: 0.1
+    - _OutlineNoiseSize: 100
+    - _OutlineNoiseSpeed: 100
+    - _OutlineOut: 0.0004
+    - _OutlineSaturation: 0.6
     - _Parallax: 0.02
     - _RampStart: 0.0003
     - _Saturation: 1
     - _ShadowDarkness: 0.4
+    - _ShadowHue: 1
     - _ShadowSize: 0.1
     - _ShinyBlend: 2
     - _Size: 15.01

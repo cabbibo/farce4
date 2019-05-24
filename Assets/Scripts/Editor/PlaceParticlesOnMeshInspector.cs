@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-
+/*
 
 [CustomEditor(typeof(PlaceParticlesOnMesh))]
 public class PlaceParticlesOnMeshInspector : Editor {
@@ -28,4 +28,4 @@ public class PlaceParticlesOnMeshInspector : Editor {
       Saveable.Load(creator.particles,"DNA/"+creator.fileName);
     }
   }
-}
+}*/

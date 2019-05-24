@@ -1,11 +1,6 @@
 ﻿Shader "Debug/IndexLine" {
 	Properties {
   	_Color ("Color", Color) = (1,1,1,1)
-    [Toggle(Enable9Struct)] _Struct9("9 Struct", Float) = 0
-    [Toggle(Enable12Struct)] _Struct12("12 Struct", Float) = 0
-  	[Toggle(Enable16Struct)] _Struct16("16 Struct", Float) = 0
-  	[Toggle(Enable24Struct)] _Struct24("24 Struct", Float) = 0
-  	[Toggle(Enable36Struct)] _Struct36("36 Struct", Float) = 0
 	}
 
 
@@ -14,12 +9,6 @@
     Pass{
 
 		  CGPROGRAM
-
-      #pragma multi_compile __ Enable9Struct
-      #pragma multi_compile __ Enable12Struct
-      #pragma multi_compile __ Enable16Struct
-		  #pragma multi_compile __ Enable24Struct
-		  #pragma multi_compile __ Enable36Struct
 
 		  #pragma target 4.5
 
@@ -30,7 +19,7 @@
 
 
       
-		  #include "../Chunks/StructIfDefs.cginc"
+		  #include "../Chunks/Struct16.cginc"
 
 
 		  uniform int _Count;

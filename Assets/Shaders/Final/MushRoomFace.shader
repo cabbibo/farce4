@@ -56,19 +56,21 @@
                 float3 col;
 
                 float size = 1000;
-                float n = noise(v.world * 120);//sin(v.world.x * size)  + sin(v.world.y*size) + sin(v.world.z * size) ;
+                float n = 0.01*noise(v.world * 120);//sin(v.world.x * size)  + sin(v.world.y*size) + sin(v.world.z * size) ;
                 //float attenuation = LIGHT_ATTENUATION(v);
 
 
+                float m2 = floor((m + n * 10) * 6) / 6;
                 float attenuation = UNITY_SHADOW_ATTENUATION(v,v.world  + v.normal * .004 );
                 float attenuation2 = UNITY_SHADOW_ATTENUATION(v,v.world + n * v.normal * .1 );
-                m = min( m , attenuation) + n * .2;
-                float m2 = floor(m * 10) / 10;
+                m = min( m , attenuation2) + n * .2;
                 m = 1.5-1000*pow(abs( m - m2 ),4);
 
-                col = hsv((abs(attenuation2 - attenuation)*.1)+m2 * .8 + _Time.y* .5,.6,1);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
+                col = hsv( attenuation * .3 + m2 * .6  + _Time.y * .2 + n * 10,.4,.7 + attenuation * .4);//+ .4*attenuation;// tex2D(_ColorMap,float2(m * _Size + _Offset,.5)) *  (m * .5 + .5);//lerp( float3(0,1,0) , float3(0,0,1) , 1-m);// * float3(0,1,0);
 
+                float3 fNor = normalize(cross(normalize(ddx(v.world)),normalize(ddy(v.world))));
 
+                //col = (v.normal * -1) * .4 + .7;
                 //if( n < .36 ){ discard; }
                 return saturate(float4(col, 1.0));
             }
