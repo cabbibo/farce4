@@ -6,6 +6,10 @@
 [Bb]uilds/
 [Ll]ogs/
 
+
+[Ss]creenshotFolder/
+recording_*
+
 # Never ignore Asset meta data
 ![Aa]ssets/**/*.meta
 
