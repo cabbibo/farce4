@@ -13,11 +13,14 @@ struct Vert{
 
 struct Particle{
     float3 pos;
+    float3 vel;
     float3 nor;
     float3 tangent;
     float2 uv;
-    float debug;
+    float2 debug;
 };
+
+
 
 RWStructuredBuffer<Vert> _VertBuffer;
 RWStructuredBuffer<Particle> _SkeletonBuffer;
