@@ -8,7 +8,7 @@ public class CaptureTest : MonoBehaviour {
     // a movie using image utility software (eg, QuickTime Pro).
     // The folder to contain our screenshots.
     // If the folder exists we will append numbers to create an empty folder.
-    string folder = "ScreenshotFolder/Next";
+    string folder = "ScreenshotFolder/FinalImages";
     int frameRate = 60;
         
     void Start () {
@@ -24,7 +24,7 @@ public class CaptureTest : MonoBehaviour {
         string name = string.Format("{0}/shot{1:D04}.png", folder, Time.frameCount );
         
         // Capture the screenshot to the specified file.
-        ScreenCapture.CaptureScreenshot(name,4);
+        ScreenCapture.CaptureScreenshot(name,2);
         this.enabled = false;
     }
 }

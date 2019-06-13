@@ -45,6 +45,8 @@ public class CheckToSeeIfTrueDepth : MonoBehaviour
     void NotSupported(){
       Screen.orientation = ScreenOrientation.Portrait;
       Camera.main.GetComponent<TouchToRay>().enabled = false;
+      Time.timeScale = 0;
+      gameObject.SetActive(false);
     }
   
 
