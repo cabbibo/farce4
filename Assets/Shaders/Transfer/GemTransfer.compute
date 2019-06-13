@@ -1,0 +1,107 @@
+﻿#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+  struct Skeleton{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Skeleton> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+
+int _VertsPerVert;
+int _NumSides;
+float3 _CameraForward;
+float3 _CameraRight;
+float3 _CameraUp;
+float _Radius;
+float _Time;
+float _Length;
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int vertsPerParticle = ( _NumSides * 2 + 1 );
+    int transferID = pID / vertsPerParticle;
+    int which = pID % vertsPerParticle;
+    int base = which / _NumSides;
+    // 0 , 1, 2 ( for the tip of gem )
+    float angle = 6.28 * float(which % _NumSides) / float(_NumSides);
+    
+    Skeleton particle = _SkeletonBuffer[safeID(transferID,_SkeletonBuffer_COUNT)];
+
+
+    float3 fPos; float2 fUV; float3 fNor; float3 fTan;float2 fDebug;
+
+    float3 dir = normalize(particle.nor);//-normalize(cross(s.tangent,s.nor));
+    float3 tang = _CameraForward;//normalize(cross( normalize(leafDir) * 1000 , 10000*float3(0,1,0)));
+    float3 x = normalize( cross( dir, tang));
+    float3 y = normalize( cross( dir, x));
+
+    float3 z = dir;
+  
+    float fRad = _Radius  * ( sin(float(transferID) * 100.) + 3)/3;
+
+    float v = (hash( float(transferID) )+1)/2;
+    float v2 = (hash( float(transferID) *30)+1)/2;
+
+    fPos = particle.pos;
+    fPos +=  (-.2 + float( base )/2) * dir * _Length * v;
+
+    float3 tPos = fPos;
+
+
+    float last = 1-float(max(base -1,0));
+    fPos += x * sin(angle) * _Radius * last * v2;
+    fPos += y * -cos(angle) * _Radius * last * v2;
+
+    fNor = normalize(fPos - tPos);
+    fTan = normalize( cross( fNor, x));
+    fUV  = float2( (float( base )/2) , angle / 6.28 );
+
+    fDebug = float2(.5 , 1);
+
+
+
+
+
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos    = fPos;
+    _VertBuffer[pID].uv     = fUV;
+    _VertBuffer[pID].nor    = fNor;
+    _VertBuffer[pID].tangent  = fTan;
+    _VertBuffer[pID].debug  = fDebug;
+
+}

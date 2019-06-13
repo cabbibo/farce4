@@ -1,5 +1,6 @@
 ﻿
 #pragma kernel Transfer
+#pragma kernel SuccTransfer
 
 struct Vert{
     float3 pos;
@@ -21,6 +22,8 @@ int _SkeletonBuffer_COUNT;
 
 int _VertsPerVert;
 int _VertsPerHair;
+
+float3 _CameraForward;
 
 
 #define NR_THREADS 128
@@ -96,3 +99,55 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     _VertBuffer[pID].debug = fDebug;
 
 }
+
+float _LeafWidth;
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void SuccTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 4;
+    int which = pID % 4;
+
+    int sID = (transferID / _VertsPerVert);
+
+    Vert p = _FernBuffer[safeID( transferID , _FernBuffer_COUNT )];
+    Vert s = _SkeletonBuffer[safeID(sID,_SkeletonBuffer_COUNT)];
+
+    float3 dir = (p.pos - s.pos);
+    float3 x = normalize(cross(_CameraForward, normalize(dir)));
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+    float3 fTan = normalize(x);
+
+    fNor = normalize(dir);
+
+    if( which == 0 ){
+      fPos = s.pos;
+      fUV = float2( .5, .0); 
+    }else if( which  == 1 ){
+      fPos = s.pos + dir * .5  + x * _LeafWidth;
+      fUV = float2( 1 , .5 );
+    }else if( which  ==  2 ){
+      fPos = s.pos + dir * .5  - x * _LeafWidth;
+      fUV = float2( 0 , .5 );
+    }else{
+      fPos = p.pos;
+      fUV = float2( .5 , 1 );
+    }
+fDebug=float3(1,1,1);
+    
+   // fPos = float3(0,0,0);
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].nor = fNor;
+    _VertBuffer[pID].tangent = fTan;
+    _VertBuffer[pID].debug = fDebug;
+
+}
+
