@@ -19694,7 +19694,7 @@ GameObject:
   - component: {fileID: 1247975856}
   - component: {fileID: 1247975855}
   m_Layer: 0
-  m_Name: Particle Emitter
+  m_Name: Pollen Spores
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
