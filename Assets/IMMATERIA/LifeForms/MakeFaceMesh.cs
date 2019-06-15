@@ -37,7 +37,10 @@ public class MakeFaceMesh : Cycle {
     mesh =  face.Load(title);
 
     mesh.RecalculateBounds();
+    mesh.RecalculateNormals();
     mesh.RecalculateTangents();
+
+    print(mesh.normals.Length);
 
 
     ((MutatingVerts)verts).mesh = mesh;

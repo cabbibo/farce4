@@ -1,0 +1,135 @@
+﻿#pragma kernel Simulate
+#pragma kernel SimulateCurl
+
+
+  struct Anchor{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+
+  struct Vert{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float2 uv;
+  float2 debug;
+};
+
+
+
+float4x4 _Transform;
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Anchor> _AnchorBuffer;
+
+int _VertBuffer_COUNT;
+int _AnchorBuffer_COUNT;
+
+int _ParticlesPerParticle;
+float _Time;
+
+
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+#include "../Chunks/snoise.cginc"
+#include "../Chunks/curlNoise.cginc"
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Simulate(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+  int pID = threadID + u3GroupID.x * NR_THREADS;
+
+
+  int aID = pID / _ParticlesPerParticle;
+
+  
+
+  Vert vert = _VertBuffer[safeID(pID,_VertBuffer_COUNT)];
+  Anchor a = _AnchorBuffer[safeID(aID,_AnchorBuffer_COUNT)];
+
+  bool freeze = false;
+  if( vert.debug.x <= 0 ){
+    vert.pos = a.pos;
+    vert.vel = a.vel * 1;
+    vert.debug.x = hash(float(pID*100+_Time));
+  }else{
+    vert.debug.x -= (hash( float(pID)) * .4 + .6) * .01;
+    vert.vel += curlNoise( vert.pos * 10 + float3(0,_Time * .2,0)) * .0001;
+    vert.vel *= .9;
+    vert.pos += vert.vel;
+    vert.debug.y += hash(float(pID * 30));
+
+
+  }
+  
+
+  
+  _VertBuffer[pID] = vert;
+
+}
+
+
+
+float3 _FaceForward;
+float3 _FacePosition;
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void SimulateCurl(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+  int pID = threadID + u3GroupID.x * NR_THREADS;
+
+
+  int aID = pID / _ParticlesPerParticle;
+
+  
+
+  Vert vert = _VertBuffer[safeID(pID,_VertBuffer_COUNT)];
+  Anchor a = _AnchorBuffer[safeID(aID,_AnchorBuffer_COUNT)];
+
+  bool freeze = false;
+  if( vert.debug.x <= 0 ){
+    vert.pos = a.pos;
+    vert.pos += .01 * float3(hash( float(pID*120+_Time)) , hash( float(pID*20+_Time)) , hash( float(pID*12+_Time))); 
+    vert.vel = a.vel * 1;
+    vert.debug.x = hash(float(pID*100+_Time));
+  }else{
+    vert.debug.x -= (hash( float(pID)) * .4 + 4) * .001;
+
+
+    float3 f = 0;
+
+    f+= .4 * curlNoise( vert.pos * 10 + float3(0,_Time * .2,0)) ;
+    f += -_FaceForward;
+    f += 2*cross( normalize(vert.pos - _FacePosition) , _FaceForward );
+    f += vert.nor;
+    vert.vel += f * .0001;
+    vert.vel *= .9;
+    vert.pos += vert.vel;
+    vert.debug.y += hash(float(pID * 30));
+
+
+  }
+  
+
+  
+  _VertBuffer[pID] = vert;
+
+}
+
+
+

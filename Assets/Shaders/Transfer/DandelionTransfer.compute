@@ -252,6 +252,7 @@ void FlowerTransferSquare (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_G
 
 
 
+float _UpVal;
 
 
 #define NR_THREADS 128
@@ -275,7 +276,7 @@ void CenterTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
     float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
 
     if( which == _VertsPerVert ){
-      fPos = -(s2.pos - s1.pos ) * _Radius + s1.pos;
+      fPos = -(s2.pos - s1.pos ) * _Radius * _UpVal + s1.pos;
       fNor =  normalize(s2.pos - s1.pos );
       fUV = float2(0,0);
     }else if( which == _VertsPerVert + 1 ){
@@ -292,7 +293,7 @@ void CenterTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID
         
       float fW = float(which)/float(_VertsPerVert);
 
-      Vert d = _DandelionBuffer[safeID(fID,_SkeletonBuffer_COUNT)];
+      Vert d = _DandelionBuffer[safeID(fID,_DandelionBuffer_COUNT)];
 
       fPos = (d.pos - s1.pos ) * _Radius + s1.pos;
       fNor =  normalize(d.pos - s1.pos );

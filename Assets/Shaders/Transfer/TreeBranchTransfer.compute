@@ -1,0 +1,114 @@
+﻿#pragma kernel Transfer
+
+struct Vert{
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tangent;
+    float2 uv;
+    float2 debug;
+};
+
+
+struct Particle{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float idOfParent;
+  float id;
+  float idInBranch;
+  float level;
+
+};
+
+
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Particle> _SkeletonBuffer;
+
+int _VertBuffer_COUNT;
+int _SkeletonBuffer_COUNT;
+#include "../Chunks/safeID.cginc"
+
+int _VertsPerVert;
+int _NumVertsPerHair;
+float3 _CameraUp;
+float3 _CameraRight;
+float3 _CameraForward;
+float _Radius;
+
+
+
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 4;
+    int which = pID % 4;
+
+    Particle p = _SkeletonBuffer[safeID( transferID , _SkeletonBuffer_COUNT )];
+
+
+
+    int upDown = which / 2;
+
+
+
+    Particle pDown = _SkeletonBuffer[safeID( p.idOfParent ,_SkeletonBuffer_COUNT)];
+    
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+
+    float3 dir = normalize(p.pos - pDown.pos);
+    float l = length(dir);
+    dir = normalize(dir);
+    
+    float3 x = normalize(cross(dir, _CameraForward));
+    //float3 y = cross(x,_CameraForward);
+    float r =l * .001 / p.level;//_Radius * min( p.debug.x * 10 , 1 - p.debug.x );
+
+
+    fPos = p.pos;
+
+    fDebug = float2(1,1);
+    fUV = float2(0,0);
+
+   // fPos = p.pos - x * r - y * r;
+
+   
+    if( which == 0 ){
+      fPos = p.pos - x * r ;
+      fUV = float2( 0, 0); 
+      fDebug = float2( float(transferID) , p.level );
+    }else if( which  == 1 ){
+      fPos = p.pos + x * r ;
+      fDebug = float2( float(transferID) , p.level );
+      fUV = float2( 1 , 0 );
+    }else if( which == 2 ){
+      fPos = pDown.pos - x * r ;
+      fDebug = float2( float(transferID) , p.level );
+      fUV = float2( 0 , 1 );
+    }else{
+      fPos = pDown.pos + x * r ;
+      fDebug = float2( float(transferID) , p.level );
+      fUV = float2( 1 , 1 );
+    }
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    if( p.level == 0 ){
+      fPos = 0; 
+    }
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].vel = p.vel;
+    _VertBuffer[pID].nor = normalize(p.vel);//cross(_CameraRight,_CameraUp);// fNor;
+    _VertBuffer[pID].debug = fDebug;
+
+}

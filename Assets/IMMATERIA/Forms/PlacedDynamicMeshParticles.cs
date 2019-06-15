@@ -8,6 +8,7 @@ public class PlacedDynamicMeshParticles: Particles {
   public float noiseSize;
   public string noiseType;
   public MeshFilter mesh;
+  public Body body;
 
   struct Vert{
 
@@ -36,13 +37,21 @@ public class PlacedDynamicMeshParticles: Particles {
 
 public virtual void Embody( MeshFilter mesh ){
 
+  Embody( mesh.mesh );
+  }
+
+
+
+public virtual void Embody( Mesh mesh ){
+
   if(AutoEmbody){
 
-    int[] triangles = mesh.mesh.triangles;
-    Vector3[] verts = mesh.mesh.vertices;
-    Vector2[] uvs = mesh.mesh.uv;
-    Vector4[] tans = mesh.mesh.tangents;
-    Vector3[] nors = mesh.mesh.normals;
+    int[] triangles = mesh.triangles;
+    Vector3[] verts = mesh.vertices;
+    Vector2[] uvs = mesh.uv;
+    Vector4[] tans = mesh.tangents;
+    Vector3[] nors = mesh.normals;
+    print(mesh.normals.Length);
 
     float[] triangleAreas = new float[triangles.Length / 3];
     float totalArea = 0;
@@ -157,7 +166,7 @@ public virtual void Embody( MeshFilter mesh ){
 
     }
 
-
+print( values);
     SetData( values );
 }
   }

@@ -60,13 +60,16 @@ public class PlaceParticlesOnMesh : LifeForm {
     intersect.BindPrimaryForm("_SkinnedTriBuffer",skin.triangles);
     intersect.BindAttribute("_RO"  , "RayOrigin" , touch );
     intersect.BindAttribute("_RD"  , "RayDirection" , touch );
+    intersect.BindAttribute("_MinDist"  , "radius" , this );
     intersect.BindAttribute("_Transform" , "transformFloats" , this ); 
 
   }
 
 
-  public override void OnGestate(){
-    particles.Embody( mesh );
+  public override void OnGestated(){
+
+    //mesh = skin.gameObject.GetComponent<MakeFaceMesh>().mesh;
+    particles.Embody( skin.gameObject.GetComponent<MakeFaceMesh>().mesh );
   }
   
   public override void OnBirth(){
@@ -110,7 +113,9 @@ public class PlaceParticlesOnMesh : LifeForm {
 
   public override void Activate(){
     print("loading");
+    if( particles.AutoEmbody == false ){
     Saveable.Load(particles,"DNA/"+fileName); 
+  }
   }
 
   public override void Deactivate(){

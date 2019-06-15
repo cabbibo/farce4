@@ -128,10 +128,10 @@ void SuccTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) 
       fPos = s.pos;
       fUV = float2( .5, .0); 
     }else if( which  == 1 ){
-      fPos = s.pos + dir * .5  + x * _LeafWidth;
+      fPos = s.pos + dir * .5  + x * _LeafWidth * length( dir );
       fUV = float2( 1 , .5 );
     }else if( which  ==  2 ){
-      fPos = s.pos + dir * .5  - x * _LeafWidth;
+      fPos = s.pos + dir * .5  - x * _LeafWidth * length( dir );
       fUV = float2( 0 , .5 );
     }else{
       fPos = p.pos;

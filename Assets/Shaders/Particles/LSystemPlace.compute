@@ -1,0 +1,110 @@
+﻿#pragma kernel Simulate
+
+
+  struct Anchor{
+
+    float3 pos;
+    float3 vel;
+    float3 nor;
+    float3 tang;
+    float2 uv;
+    float used;
+    float3 triIDs;
+    float3 triWeights;
+    float3 debug;
+
+  };
+
+
+  struct Vert{
+  float3 pos;
+  float3 vel;
+  float3 nor;
+  float3 tang;
+  float idOfParent;
+  float id;
+  float idInBranch;
+  float level;
+
+};
+
+
+
+float4x4 _Transform;
+
+RWStructuredBuffer<Vert> _VertBuffer;
+RWStructuredBuffer<Anchor> _AnchorBuffer;
+
+int _VertBuffer_COUNT;
+int _AnchorBuffer_COUNT;
+
+int _ParticlesPerBranch;
+float _Time;
+float3 _CameraForward;
+float3 _FaceForward;
+
+float _BranchHeight;
+float _Spread;
+int _Levels;
+
+
+#include "../Chunks/safeID.cginc"
+#include "../Chunks/hash.cginc"
+#include "../Chunks/snoise.cginc"
+#include "../Chunks/curlNoise.cginc"
+
+#define NR_THREADS 128
+[numthreads(NR_THREADS,1,1)]
+void Simulate(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+  int pID = threadID + u3GroupID.x * NR_THREADS;
+
+
+  int aID = 0;//pID / _ParticlesPerParticle;
+
+  
+
+  Vert vert = _VertBuffer[safeID(pID,_VertBuffer_COUNT)];
+
+
+  float3 targetPos;
+
+  if( vert.level == 0 ){
+
+  Anchor a = _AnchorBuffer[safeID(vert.idOfParent,_AnchorBuffer_COUNT)];
+    targetPos = a.pos - a.nor * .003;
+    vert.nor = a.nor;
+  
+  }else{
+
+    float h1 =(sin(pID* .1) +1)/1;
+    float h2 =(sin(pID* .3) +1)/1;
+    float radius = _Spread * h1* ((vert.level / float(_Levels)));
+    float angle = 6.28 * (float( vert.idInBranch ) / float(_ParticlesPerBranch)) + float(vert.idOfParent);
+
+    float3 x = normalize(cross(vert.nor, float3(1,0,0)));
+    float3 y = normalize(cross(x,vert.nor));
+    float3 outVec = (sin( angle ) * x - cos( angle ) * y) * radius;
+
+    Vert parent = _VertBuffer[ safeID(vert.idOfParent,_VertBuffer_COUNT) ];
+    targetPos = parent.pos + vert.nor  * _BranchHeight * h2 * (1.5-(vert.level / float(_Levels))) + outVec; 
+    vert.nor = parent.nor;//lerp( vert.nor , normalize( par ) , .1);
+  
+
+  }
+
+
+  float3 force = targetPos - vert.pos;
+  force += curlNoise( vert.pos* 3 + _Time * .1 ) * .0001;
+  vert.vel += force * .2;
+
+  vert.pos += vert.vel;
+  vert.vel *= .7;
+
+  //vert.pos = targetPos;
+
+  
+  _VertBuffer[pID] = vert;
+
+}
+

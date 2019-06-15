@@ -14,7 +14,7 @@ int _Deform;
 int _TouchID;
 
 
-float _MinDistance;
+float _MinDist;
 
 int _ActiveObject;
 
@@ -206,7 +206,7 @@ void SetParticle( int objectID, int id1 , int id2 ,int id3 , float4 r , float3 i
 
   float3 dif = pInfo.xyz - intersectPosition;
 
-  if( length(dif) > _MinDistance ){
+  if( length(dif) > _MinDist ){
 
 
     Particle p = GetParticleFromID( objectID  , int(pInfo.a) );

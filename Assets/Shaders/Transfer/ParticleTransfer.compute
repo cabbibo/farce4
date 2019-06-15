@@ -1,5 +1,6 @@
 ﻿
 #pragma kernel Transfer
+#pragma kernel LifeTimeTransfer
 
 struct Vert{
     float3 pos;
@@ -33,6 +34,7 @@ int _VertsPerVert;
 int _NumVertsPerHair;
 float3 _CameraUp;
 float3 _CameraRight;
+float3 _CameraForward;
 float _Radius;
 
 
@@ -87,6 +89,66 @@ void Transfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     _VertBuffer[pID].pos = fPos;
     _VertBuffer[pID].uv = fUV;
     _VertBuffer[pID].nor = cross(_CameraRight,_CameraUp);// fNor;
+    _VertBuffer[pID].debug = fDebug;
+
+}
+
+
+
+
+#define NR_THREADS 64
+[numthreads(NR_THREADS,1,1)]
+void LifeTimeTransfer (uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
+
+    int pID = threadID + u3GroupID.x * NR_THREADS;
+
+    int transferID = pID / 4;
+    int which = pID % 4;
+
+    Particle p = _SkeletonBuffer[safeID( transferID , _SkeletonBuffer_COUNT )];
+    
+
+    float3 fPos; float2 fUV; float3 fNor; float2 fDebug;
+
+
+    float3 dir = normalize(p.vel);
+    float3 x = normalize(cross(dir, _CameraForward));
+    float3 y = cross(x,_CameraForward);
+    float r = _Radius * min( p.debug.x * 10 , 1 - p.debug.x );
+
+
+    fPos = p.pos;
+
+    fDebug = float2(1,1);
+    fUV = float2(0,0);
+
+    fPos = p.pos - x * r - y * r;
+
+   
+    if( which == 0 ){
+      fPos = p.pos - x * r - y * r;
+      fUV = float2( 0, 0); 
+      fDebug = float2( float(transferID) , 0 );
+    }else if( which  == 1 ){
+      fPos = p.pos + x * r - y * r;
+      fDebug = float2( float(transferID) , 0 );
+      fUV = float2( 1 , 0 );
+    }else if( which == 2 ){
+      fPos = p.pos - x * r + y * r;
+      fDebug = float2( float(transferID) , 0 );
+      fUV = float2( 0 , 1 );
+    }else{
+      fPos = p.pos + x * r + y * r;
+      fDebug = float2( float(transferID) , 0 );
+      fUV = float2( 1 , 1 );
+    }
+
+    pID = safeID(pID,_VertBuffer_COUNT);
+
+    _VertBuffer[pID].pos = fPos;
+    _VertBuffer[pID].uv = fUV;
+    _VertBuffer[pID].vel = p.vel;
+    _VertBuffer[pID].nor = normalize(p.vel);//cross(_CameraRight,_CameraUp);// fNor;
     _VertBuffer[pID].debug = fDebug;
 
 }
