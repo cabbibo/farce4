@@ -20,6 +20,7 @@
             LOD 150
             Blend Zero SrcColor
             ZWrite On
+            Blend OneMinusDstColor One // Soft Additive
 
             Cull Off
 

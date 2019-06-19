@@ -95,7 +95,7 @@ void Simulate(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
 
 
   float3 force = targetPos - vert.pos;
-  force += curlNoise( vert.pos* 3 + _Time * .1 ) * .0001;
+  force += curlNoise( vert.pos* 3 + _Time * .1 ) * .00001;
   vert.vel += force * .2;
 
   vert.pos += vert.vel;

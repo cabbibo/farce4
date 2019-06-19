@@ -133,12 +133,12 @@
 
             //fNor = normalize(fNor);
 
-            float3 refractedVec = refract( normalize(v.eye), fNor , .8 );
+            float3 refractedVec = refract( normalize(v.eye), fNor , .6 );
             float3 reflectedVec = reflect( normalize(v.eye), fNor  );
 
            //if( radius > 1 ){discard;}
             
-            float3 refracted = v.worldPos - .003 * refractedVec;
+            float3 refracted = v.worldPos - .07 * refractedVec;
 
             float4 refractedScreenPos = ComputeScreenPos( mul(UNITY_MATRIX_VP, float4(refracted,1)) );
 

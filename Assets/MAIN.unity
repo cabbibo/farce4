@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4512307, g: 0.5009517, b: 0.57356423, a: 1}
+  m_IndirectSpecularColor: {r: 0.45123065, g: 0.5009514, b: 0.57356256, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46d8dead6592a40bb87431438ce21e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeTilSelect: 11110.4
+  timeTilSelect: 0.4
   velCutoff: 10
   OnTrigger:
     m_PersistentCalls:
@@ -8418,6 +8418,7 @@ GameObject:
   - component: {fileID: 416507615}
   - component: {fileID: 416507617}
   - component: {fileID: 416507616}
+  - component: {fileID: 416507619}
   m_Layer: 0
   m_Name: Center (1)
   m_TagString: Untagged
@@ -8635,6 +8636,20 @@ Transform:
   m_Father: {fileID: 33682129}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &416507619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416507612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c1005eafa00d9468c5eb35bc909fb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body: {fileID: 416507614}
+  info: {fileID: 556734213}
 --- !u!1 &420627570
 GameObject:
   m_ObjectHideFlags: 0
@@ -13162,7 +13177,7 @@ MonoBehaviour:
   particles: {fileID: 823816498}
   place: {fileID: 823816501}
   intersect: {fileID: 823816499}
-  fileName: sparkle1
+  fileName: Sparkle1
   cameraUp: {x: 0, y: 0, z: 0}
   cameraLeft: {x: 0, y: 0, z: 0}
   radius: 0.01
@@ -14509,7 +14524,7 @@ MonoBehaviour:
   triangles: {fileID: 929616027}
   transfer: {fileID: 929616026}
   body: {fileID: 929616025}
-  showBody: 0
+  showBody: 1
   skeleton: {fileID: 1393318855}
   radius: 0.006
   transformArray: []
@@ -16086,7 +16101,7 @@ MonoBehaviour:
   triangles: {fileID: 1035760502}
   transfer: {fileID: 1035760501}
   body: {fileID: 1035760500}
-  showBody: 1
+  showBody: 0
   skeleton: {fileID: 1897591170}
   radius: 0.006
   transformArray: []
@@ -18502,8 +18517,8 @@ MonoBehaviour:
   active: 1
   Cycles: []
   toBind: {fileID: 1111238500}
-  _Length: 0.02
-  _Radius: 0.01
+  _Length: 0.03
+  _Radius: 0.02
   verts: {fileID: 1111238502}
 --- !u!1 &1126736065
 GameObject:
@@ -20063,7 +20078,7 @@ GameObject:
   - component: {fileID: 1282578609}
   - component: {fileID: 1282578608}
   m_Layer: 0
-  m_Name: Credits (1)
+  m_Name: PrismaticSimulations.com
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20299,7 +20314,7 @@ MonoBehaviour:
   died: 0
   destroyed: 1
   debug: 0
-  active: 0
+  active: 1
   Cycles: []
   toBind: {fileID: 1309561935}
   particles: {fileID: 1309561936}
@@ -21694,7 +21709,7 @@ MonoBehaviour:
   died: 0
   destroyed: 1
   debug: 0
-  active: 0
+  active: 1
   Cycles: []
   toBind: {fileID: 1393318854}
   particles: {fileID: 1393318855}
@@ -21936,7 +21951,7 @@ MonoBehaviour:
   Forms: []
   icon: {fileID: 2800000, guid: 443e860c4a2f344879cd0a8b2c8a3d8f, type: 3}
   BlitMaterial: {fileID: 0}
-  FaceMaterial: {fileID: 2100000, guid: 5d9724945aea641f693d39ac0515ded7, type: 2}
+  FaceMaterial: {fileID: 2100000, guid: 88ed142f99267ae4fab086d60ee17adf, type: 2}
   BackgroundMaterial: {fileID: 2100000, guid: 3911c016e7de74db2ae384c32004feac, type: 2}
   background: {fileID: 0}
   skybox: {fileID: 2100000, guid: a508487e38c846743a925747ddc1f7b3, type: 2}
@@ -23391,13 +23406,16 @@ TextMesh:
 
     PRODUCTION: ATLEY!
 
-    LOGO : JAIME!
+    LOGO : JAMIE!
 
     CODE: ISAAC!
 
+
+    INSTA: @FacePlantApp
+
 '
   m_OffsetZ: 0
-  m_CharacterSize: 0.0014
+  m_CharacterSize: 0.001
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
@@ -24516,7 +24534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bab0dcd8d2b1f4a229ae75f8e0d81887, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doCheck: 0
+  doCheck: 1
   canvas: {fileID: 2070018117}
 --- !u!4 &1620113718
 Transform:
@@ -27646,7 +27664,7 @@ MonoBehaviour:
   debugMaterial: {fileID: 2100000, guid: bfdba931e444ed946a647d01a3fac6e5, type: 2}
   placedParticles: {fileID: 1696336265}
   levels: 4
-  particlesPerLevel: 10
+  particlesPerLevel: 6
 --- !u!4 &1897591171
 Transform:
   m_ObjectHideFlags: 0

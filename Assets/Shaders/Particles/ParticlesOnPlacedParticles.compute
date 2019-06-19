@@ -65,7 +65,7 @@ void Simulate(uint threadID : SV_GroupIndex, uint3 u3GroupID : SV_GroupID) {
     vert.vel = a.vel * 1;
     vert.debug.x = hash(float(pID*100+_Time));
   }else{
-    vert.debug.x -= (hash( float(pID)) * .4 + .6) * .01;
+    vert.debug.x -= (hash( float(pID)) * .4 + .6) * .02;
     vert.vel += curlNoise( vert.pos * 10 + float3(0,_Time * .2,0)) * .0001;
     vert.vel *= .9;
     vert.pos += vert.vel;
